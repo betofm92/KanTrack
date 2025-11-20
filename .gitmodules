@@ -1,0 +1,41 @@
+[submodule "packages/fleetops"]
+	path = packages/fleetops
+	url = git@github.com:paulocrn/fleetops.git
+[submodule "packages/storefront"]
+	path = packages/storefront
+	url = git@github.com:paulocrn/storefront.git
+[submodule "packages/pallet"]
+	path = packages/pallet
+	url = git@github.com:paulocrn/pallet.git
+[submodule "packages/core-api"]
+	path = packages/core-api
+	url = https://github.com/paulocrn/core-api.git
+	branch = main
+[submodule "packages/ember-core"]
+	path = packages/ember-core
+	url = git@github.com:paulocrn/ember-core.git
+	branch = main
+[submodule "packages/ember-ui"]
+	path = packages/ember-ui
+	url = git@github.com:paulocrn/ember-ui.git
+	branch = main
+[submodule "packages/iam-engine"]
+	path = packages/iam-engine
+	url = git@github.com:paulocrn/iam-engine.git
+[submodule "packages/dev-engine"]
+	path = packages/dev-engine
+	url = git@github.com:paulocrn/dev-engine.git
+	branch = main
+[submodule "packages/fleetbase-extensions-indexer"]
+	path = packages/fleetbase-extensions-indexer
+	url = git@github.com:paulocrn/fleetbase-extensions-indexer.git
+[submodule "packages/fleetops-data"]
+	path = packages/fleetops-data
+	url = git@github.com:paulocrn/fleetops-data.git
+	branch = main
+[submodule "packages/registry-bridge"]
+	path = packages/registry-bridge
+	url = git@github.com:paulocrn/registry-bridge.git
+[submodule "packages/ledger"]
+	path = packages/ledger
+	url = git@github.com:paulocrn/ledger.git
