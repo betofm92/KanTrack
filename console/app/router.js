@@ -8,6 +8,7 @@ export default class Router extends EmberRouter {
 
 Router.map(function () {
     this.route('virtual', { path: '/:slug' });
+    this.route('install');
     this.route('onboard', function () {
         this.route('index', { path: '/' });
     });
@@ -66,14 +67,14 @@ Router.map(function () {
             path: 'developers'
         });
 
-        this.mount('@fleetbase/iam-engine', {
-            as: 'iam',
-            path: 'iam'
-        });
-
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
             path: 'fleet-ops'
+        });
+
+        this.mount('@fleetbase/iam-engine', {
+            as: 'iam',
+            path: 'iam'
         });
 
         this.mount('@fleetbase/registry-bridge-engine', {
