@@ -77,6 +77,11 @@ module.exports = function (environment) {
             autoClear: true,
             clearDuration: 1000 * 3.5,
         },
+
+        'intl': {
+            defaultLocale: 'es-es',
+            locales: ['es-es', 'en']
+        },
     };
 
     if (environment === 'development') {
