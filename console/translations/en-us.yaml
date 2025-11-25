@@ -791,3 +791,6 @@ layout:
         view-profile: View profile
         keyboard-shortcuts: Show keyboard shortcuts
         changelog: Changelog
+
+permission:
+  description: "{actionName} {actionPreposition} {resourceName} {resourcePreposition} {extensionName} {extensionPreposition}"
