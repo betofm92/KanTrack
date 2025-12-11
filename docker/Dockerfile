@@ -18,7 +18,6 @@ RUN install-php-extensions \
   apcu \
   opcache \
   memcached \
-  imagick \
   sockets \
   pcntl \
   @composer
@@ -49,8 +48,8 @@ RUN curl -fsSL -o php-geos.zip \
 
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
-  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' \
-  -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
+  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 50M/' -e 's/^post_max_size.*/post_max_size = 50M/' \
+  -e 's/^memory_limit.*/memory_limit = 2560M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
 RUN npm install -g chokidar pnpm ember-cli npm-cli-login
@@ -88,7 +87,7 @@ RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\":
 RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
 
 COPY --chown=www-data:www-data ./api /fleetbase/api
-RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
+RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
 RUN test -f /fleetbase/api/vendor/autoload.php && echo "✓ autoload.php creado correctamente" || (echo "✗ ERROR: autoload.php no encontrado" && ls -la /fleetbase/api/vendor/ && exit 1)
 
@@ -113,19 +112,9 @@ CMD ["go-crond", "--verbose", "root:./crontab"]
 # Events stage
 FROM base AS events
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["php", "artisan", "queue:work"]
-
-# Application dev stage
-FROM base AS app-dev
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"]
-
-# Application release stage
-FROM base AS app-release
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"]
+CMD ["php", "artisan", "queue:work --max-jobs=50 --max-memory=64"]
 
 # Application stage
 FROM base AS app
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=1 --max-requests=10 --port=8000 --host=0.0.0.0"]
