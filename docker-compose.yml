@@ -7,9 +7,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    mem_limit: 1500m
+    mem_reservation: 512m
 
   database:
+    mem_limit: 1500m
+    mem_reservation: 1024m
     image: mysql:8.0
+    volumes:
+      - ./mysql-conf/my.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -24,16 +30,24 @@ services:
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
+    mem_limit: 2g
     restart: unless-stopped
     ports:
       - "38000:8000"
     environment:
-      SOCKETCLUSTER_WORKERS: 10
-      SOCKETCLUSTER_BROKERS: 10
+      SOCKETCLUSTER_WORKERS: 2
+      SOCKETCLUSTER_BROKERS: 2
 
   scheduler:
     image: local-fleetbase-api:latest
-    command: ["go-crond", "--verbose", "root:./crontab"]
+    command: >
+      sh -lc "php artisan queue:work
+      --sleep=2
+      --tries=3
+      --timeout=120
+      --memory=256
+      --max-jobs=200
+      --max-time=3600"
     restart: unless-stopped
     environment:
       DATABASE_URL: "mysql://root@database/trackbase"
@@ -49,6 +63,8 @@ services:
   queue:
     image: local-fleetbase-api:latest
     command: ["php", "artisan", "queue:work"]
+    mem_limit: 1500m
+    mem_reservation: 512m
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
@@ -88,7 +104,7 @@ services:
     environment:
       # Variables para depuración (interno, no dominio público)
       API_HOST: "http://application:8000"
-      SOCKET_HOST: "socket"
+      # SOCKET_HOST: "socket"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4200/health.json"]
       interval: 30s
@@ -106,10 +122,11 @@ services:
 
   application:
     image: local-fleetbase-api:latest
-    command: php artisan serve --host=0.0.0.0 --port=8000
       #  - ./api/.env:/fleetbase/api/.env
       # - ./api:/fleetbase/api:cached
       # - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
+    mem_limit: 2g
+
     environment:
       # URL pública detrás de Nginx + SSL
       APP_URL: "https://kantrack.tech"
@@ -148,8 +165,8 @@ services:
       - database
       - cache
       - queue
-    ports:
-      - "8000:8000"
+    networks:
+      - default
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 30s

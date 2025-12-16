@@ -49,7 +49,7 @@ RUN curl -fsSL -o php-geos.zip \
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
   && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 50M/' -e 's/^post_max_size.*/post_max_size = 50M/' \
-  -e 's/^memory_limit.*/memory_limit = 2560M/' "$PHP_INI_DIR/php.ini"
+  -e 's/^memory_limit.*/memory_limit = 512M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
 RUN npm install -g chokidar pnpm ember-cli npm-cli-login

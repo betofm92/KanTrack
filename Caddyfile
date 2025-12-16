@@ -1,6 +1,6 @@
 {
 	frankenphp {
-		num_threads 24
+		num_threads 2
 	}
 	order php_server before file_server
 }
