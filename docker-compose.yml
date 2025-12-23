@@ -2,6 +2,9 @@ services:
   cache:
     image: redis:4-alpine
     restart: unless-stopped
+    mem_limit: 96m
+    mem_reservation: 48m
+    pids_limit: 100
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -9,32 +12,57 @@ services:
       retries: 5
 
   database:
-    image: mysql:8.0
+    image: mysql:8.0-oracle
     restart: unless-stopped
+    mem_limit: 1200m
+    mem_reservation: 640m
+    pids_limit: 512
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 4096
     ports:
       - "3306:3306"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "trackbase"
+    volumes:
+      - ./docker/database/:/docker-entrypoint-initdb.d/
+      - ./docker/database/mysql:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
+    stop_grace_period: 60s
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
     restart: unless-stopped
+    mem_limit: 192m
+    mem_reservation: 96m
+    pids_limit: 256
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 4096
     ports:
       - "38000:8000"
     environment:
-      SOCKETCLUSTER_WORKERS: 10
-      SOCKETCLUSTER_BROKERS: 10
+      SOCKETCLUSTER_WORKERS: 1
+      SOCKETCLUSTER_BROKERS: 1
 
   scheduler:
     image: local-fleetbase-api:latest
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
+    mem_limit: 160m
+    mem_reservation: 96m
+    pids_limit: 128
+    tmpfs:
+      - /tmp:size=64m
     environment:
       DATABASE_URL: "mysql://root@database/trackbase"
       QUEUE_CONNECTION: redis
@@ -48,8 +76,18 @@ services:
 
   queue:
     image: local-fleetbase-api:latest
-    command: ["php", "artisan", "queue:work"]
+    command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=3", "--memory=256", "--max-jobs=100", "--max-time=1800"]
     restart: unless-stopped
+    mem_limit: 640m
+    mem_reservation: 320m
+    pids_limit: 256
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 4096
+    tmpfs:
+      - /tmp:size=128m
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
       interval: 30s
@@ -101,19 +139,29 @@ services:
       socket:
         condition: service_started
     restart: unless-stopped
+    mem_limit: 192m
+    mem_reservation: 96m
+    pids_limit: 128
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 2048
+    tmpfs:
+      - /tmp:size=64m
     networks:
       - default
 
   application:
     image: local-fleetbase-api:latest
-    command: php artisan serve --host=0.0.0.0 --port=8000
+      # command: php artisan serve --host=0.0.0.0 --port=8000
       #  - ./api/.env:/fleetbase/api/.env
       # - ./api:/fleetbase/api:cached
       # - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
     environment:
       # URL pública detrás de Nginx + SSL
       APP_URL: "https://kantrack.tech"
-      ENVIRONMENT: "production"
+      #ENVIRONMENT: "production"
 
       DATABASE_URL: "mysql://root@database:3306/trackbase"
       QUEUE_CONNECTION: redis
@@ -148,8 +196,19 @@ services:
       - database
       - cache
       - queue
-    ports:
-      - "8000:8000"
+    networks:
+      - default
+    restart: unless-stopped
+    mem_limit: 1024m
+    mem_reservation: 512m
+    pids_limit: 512
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 4096
+    tmpfs:
+      - /tmp:size=256m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 30s
@@ -165,7 +224,21 @@ services:
       - "8000:80"
     depends_on:
       - application
+    mem_limit: 96m
+    mem_reservation: 48m
+    pids_limit: 100
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+      nproc: 2048
+    tmpfs:
+      - /tmp:size=64m
 
 networks:
   default:
     driver: bridge
+
+volumes:
+  mysql_data:
+    external: true

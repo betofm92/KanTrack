@@ -1,23 +1,32 @@
-# console/Dockerfile - opción A
-FROM node:18.15.0-alpine AS builder
+# console/Dockerfile
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar todo el monorepo incluyendo workspace y packages
-COPY . /app
-
-# Instalar dependencias necesarias para compilar
+# deps de build
 RUN apk add --no-cache git python3 make g++
-RUN npm install -g pnpm ember-cli
 
-# Instalar dependencias desde la raíz del workspace
-RUN pnpm install
+# habilita pnpm via corepack
+RUN corepack enable
+
+# Copia primero manifests para cache
+COPY pnpm-workspace.yaml package.json ./
+
+# Copia workspace
+COPY packages ./packages
+COPY console ./console
+
+# Instala dependencias del workspace
+RUN pnpm install --no-frozen-lockfile
+
+# sanity check: deben existir los packages
+RUN test -d /app/packages/dev-engine && test -d /app/packages/ember-core
 
 # Build del console
 WORKDIR /app/console
 RUN pnpm run build
 
-# Stage final con Nginx
+# nginx stage
 FROM nginx:alpine
 RUN rm -f /etc/nginx/conf.d/*
 RUN echo 'server { listen 4200; root /usr/share/nginx/html; location / { try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/app.conf
