@@ -2,8 +2,8 @@ services:
   cache:
     image: redis:4-alpine
     restart: unless-stopped
-    mem_limit: 96m
-    mem_reservation: 48m
+    mem_limit: 64m
+    mem_reservation: 32m
     pids_limit: 100
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -13,23 +13,23 @@ services:
 
   database:
     image: mysql:8.0-oracle
-    restart: unless-stopped
-    mem_limit: 1200m
-    mem_reservation: 640m
+    restart: always
+    mem_limit: 800m
+    mem_reservation: 400m
     pids_limit: 512
     ulimits:
       nofile:
         soft: 65535
         hard: 65535
       nproc: 4096
-    ports:
-      - "3306:3306"
+   # ports:
+   #   - "3306:3306"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "KanTrack25*"
       MYSQL_DATABASE: "trackbase"
     volumes:
       - ./docker/database/:/docker-entrypoint-initdb.d/
-      - ./docker/database/mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -40,8 +40,8 @@ services:
   socket:
     image: socketcluster/socketcluster:v17.4.0
     restart: unless-stopped
-    mem_limit: 192m
-    mem_reservation: 96m
+    mem_limit: 128m
+    mem_reservation: 64m
     pids_limit: 256
     ulimits:
       nofile:
@@ -58,13 +58,13 @@ services:
     image: local-fleetbase-api:latest
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
-    mem_limit: 160m
-    mem_reservation: 96m
+    mem_limit: 96m
+    mem_reservation: 48m
     pids_limit: 128
     tmpfs:
       - /tmp:size=64m
     environment:
-      DATABASE_URL: "mysql://root@database/trackbase"
+      DATABASE_URL: "mysql://root:KanTrack25*@database/trackbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -76,10 +76,10 @@ services:
 
   queue:
     image: local-fleetbase-api:latest
-    command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=3", "--memory=256", "--max-jobs=100", "--max-time=1800"]
+    command: ["php", "artisan", "queue:work", "--sleep=2", "--tries=3", "--memory=128", "--max-jobs=50", "--max-time=900"]
     restart: unless-stopped
-    mem_limit: 640m
-    mem_reservation: 320m
+    mem_limit: 384m
+    mem_reservation: 192m
     pids_limit: 256
     ulimits:
       nofile:
@@ -94,7 +94,7 @@ services:
       timeout: 10s
       retries: 3
     environment:
-      DATABASE_URL: "mysql://root@database/trackbase"
+      DATABASE_URL: "mysql://root:KanTrack25*@database/trackbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -139,8 +139,8 @@ services:
       socket:
         condition: service_started
     restart: unless-stopped
-    mem_limit: 192m
-    mem_reservation: 96m
+    mem_limit: 128m
+    mem_reservation: 64m
     pids_limit: 128
     ulimits:
       nofile:
@@ -163,7 +163,7 @@ services:
       APP_URL: "https://kantrack.tech"
       #ENVIRONMENT: "production"
 
-      DATABASE_URL: "mysql://root@database:3306/trackbase"
+      DATABASE_URL: "mysql://root:KanTrack25*@database/trackbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -198,9 +198,9 @@ services:
       - queue
     networks:
       - default
-    restart: unless-stopped
-    mem_limit: 1024m
-    mem_reservation: 512m
+    restart: always
+    mem_limit: 768m
+    mem_reservation: 384m
     pids_limit: 512
     ulimits:
       nofile:
@@ -208,7 +208,7 @@ services:
         hard: 65535
       nproc: 4096
     tmpfs:
-      - /tmp:size=256m
+      - /tmp:size=128m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 30s
@@ -241,4 +241,4 @@ networks:
 
 volumes:
   mysql_data:
-    external: true
+    driver: local

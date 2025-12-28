@@ -1,5 +1,6 @@
 {
   "API_HOST": "https://kantrack.tech",
   "SOCKETCLUSTER_HOST": "kantrack.tech",
+  "SOCKETCLUSTER_PORT": "443",
   "SOCKETCLUSTER_SECURE": "true"
 }

@@ -49,7 +49,12 @@ RUN curl -fsSL -o php-geos.zip \
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
   && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 50M/' -e 's/^post_max_size.*/post_max_size = 50M/' \
-  -e 's/^memory_limit.*/memory_limit = 512M/' "$PHP_INI_DIR/php.ini"
+  -e 's/^memory_limit.*/memory_limit = 256M/' "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.memory_consumption=64' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.interned_strings_buffer=8' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.max_accelerated_files=4000' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.revalidate_freq=60' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.fast_shutdown=1' >> "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
 RUN npm install -g chokidar pnpm ember-cli npm-cli-login
@@ -117,4 +122,4 @@ CMD ["php", "artisan", "queue:work --max-jobs=50 --max-memory=64"]
 # Application stage
 FROM base AS app
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --workers=1 --max-requests=10 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=1 --max-requests=250 --port=8000 --host=0.0.0.0"]
