@@ -26,3 +26,6 @@
 
 # broccoli-debug
 /DEBUG/
+
+# Backups de docker-compose override (timestamped)
+docker-compose.override.yml.bak.*

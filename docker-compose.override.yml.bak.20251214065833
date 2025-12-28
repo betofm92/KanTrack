@@ -1,7 +1,0 @@
-services:
-  application:
-    environment:
-      APP_KEY: "base64:LZE7hc63uU1LD9RzSV9XqDlDTq4tuRrlsrVcPjCcKtI="
-      CONSOLE_HOST: "https://kantrack.tech:4200"
-      ENVIRONMENT: "production"
-      APP_DEBUG: "false"
