@@ -63,6 +63,12 @@ services:
     pids_limit: 128
     tmpfs:
       - /tmp:size=64m
+    healthcheck:
+      test: ["CMD", "pgrep", "-x", "go-crond"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     environment:
       DATABASE_URL: "mysql://root:KanTrack25*@database/trackbase"
       QUEUE_CONNECTION: redis

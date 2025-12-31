@@ -116,7 +116,7 @@ echo "✔  $CONFIG_PATH updated"
 ###############################################################################
 # 7. Start stack, wait for DB, then run deploy
 ###############################################################################
-echo "⏳  Starting Fleetbase containers..."
+echo "⏳  Starting KanTrack containers..."
 docker compose up -d
 
 ###############################################################################
