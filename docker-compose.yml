@@ -2,8 +2,8 @@ services:
   cache:
     image: redis:4-alpine
     restart: unless-stopped
-    mem_limit: 64m
-    mem_reservation: 32m
+    mem_limit: 48m
+    mem_reservation: 24m
     pids_limit: 100
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -14,8 +14,8 @@ services:
   database:
     image: mysql:8.0-oracle
     restart: always
-    mem_limit: 800m
-    mem_reservation: 400m
+    mem_limit: 512m
+    mem_reservation: 256m
     pids_limit: 512
     ulimits:
       nofile:
@@ -40,8 +40,8 @@ services:
   socket:
     image: socketcluster/socketcluster:v17.4.0
     restart: unless-stopped
-    mem_limit: 128m
-    mem_reservation: 64m
+    mem_limit: 96m
+    mem_reservation: 48m
     pids_limit: 256
     ulimits:
       nofile:
@@ -58,8 +58,8 @@ services:
     image: local-fleetbase-api:latest
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
-    mem_limit: 96m
-    mem_reservation: 48m
+    mem_limit: 64m
+    mem_reservation: 32m
     pids_limit: 128
     tmpfs:
       - /tmp:size=64m
@@ -78,10 +78,10 @@ services:
 
   queue:
     image: local-fleetbase-api:latest
-    command: ["php", "artisan", "queue:work", "--sleep=2", "--tries=3", "--memory=128", "--max-jobs=50", "--max-time=900"]
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--memory=96", "--max-jobs=30", "--max-time=900"]
     restart: unless-stopped
-    mem_limit: 384m
-    mem_reservation: 192m
+    mem_limit: 256m
+    mem_reservation: 128m
     pids_limit: 256
     ulimits:
       nofile:
@@ -141,8 +141,8 @@ services:
       socket:
         condition: service_started
     restart: unless-stopped
-    mem_limit: 128m
-    mem_reservation: 64m
+    mem_limit: 96m
+    mem_reservation: 48m
     pids_limit: 128
     ulimits:
       nofile:
@@ -150,7 +150,7 @@ services:
         hard: 65535
       nproc: 2048
     tmpfs:
-      - /tmp:size=64m
+      - /tmp:size=32m
     networks:
       - default
 
@@ -201,8 +201,8 @@ services:
     networks:
       - default
     restart: always
-    mem_limit: 768m
-    mem_reservation: 384m
+    mem_limit: 512m
+    mem_reservation: 256m
     pids_limit: 512
     ulimits:
       nofile:
@@ -210,7 +210,7 @@ services:
         hard: 65535
       nproc: 4096
     tmpfs:
-      - /tmp:size=128m
+      - /tmp:size=64m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 30s
@@ -226,8 +226,8 @@ services:
       - "8000:80"
     depends_on:
       - application
-    mem_limit: 96m
-    mem_reservation: 48m
+    mem_limit: 64m
+    mem_reservation: 32m
     pids_limit: 100
     ulimits:
       nofile:
@@ -235,7 +235,7 @@ services:
         hard: 65535
       nproc: 2048
     tmpfs:
-      - /tmp:size=64m
+      - /tmp:size=32m
 
 networks:
   default:
