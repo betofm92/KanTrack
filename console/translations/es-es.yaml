@@ -1,5 +1,5 @@
 app:
-  name: ServiRutas
+  name: KanTrack
 
 common:
   new: Nuevo
@@ -348,6 +348,7 @@ common:
     {resource} ({resourceName}) eliminado.
   continue-without-saving: ¿Continuar Sin Guardar?
   continue-without-saving-prompt: Tienes cambios sin guardar en este {resource}. Continuar los descartará. Haz clic en Continuar para proceder.
+  
   proof-of-delivery: Prueba de Entrega
   ad-hoc: Ad-Hoc
   bulk-dispatch: Despacho Masivo
@@ -625,41 +626,6 @@ component:
     or-select-button-text: o selecciona archivos para subir.
     upload-queue: Cola de Subida
     uploading: Subiendo...
-
-  two-fa-enforcement-alert:
-    message: Para mejorar la seguridad de tu cuenta, tu organización requiere Autenticación de Dos Factores (2FA). Habilita 2FA en la configuración de tu cuenta para una capa adicional de protección.
-    button-text: Configurar 2FA
-
-  comment-thread:
-    publish-comment-button-text: Publicar comentario
-    publish-reply-button-text: Publicar respuesta
-    reply-comment-button-text: Responder
-    edit-comment-button-text: Editar
-    delete-comment-button-text: Eliminar
-    comment-published-ago: >-
-            Hace {createdAgo}
-    comment-input-placeholder: Ingresa un nuevo comentario...
-    comment-reply-placeholder: Ingresa tu respuesta...
-    comment-input-empty-notification: No puedes publicar comentarios vacíos...
-    comment-min-length-notification: El comentario debe tener al menos 2 caracteres
-
-  dashboard:
-    select-dashboard: Seleccionar Tablero
-    create-new-dashboard: Crear nuevo Tablero
-    create-a-new-dashboard: Crear un nuevo Tablero
-    confirm-create-dashboard: ¡Crear Tablero!
-    edit-layout: Editar diseño
-    add-widgets: Agregar widgets
-    delete-dashboard: Eliminar tablero
-    save-dashboard: Guardar Tablero
-    you-cannot-delete-this-dashboard: No puedes eliminar este tablero.
-    are-you-sure-you-want-delete-dashboard: ¿Estás seguro de eliminar {dashboardName}?
-
-  dashboard-widget-panel:
-    widget-name: >-
-      Widget {widgetName}
-    select-widgets: Seleccionar Widgets
-    close-and-save: Cerrar y Guardar
 
 services:
   dashboard-service:
