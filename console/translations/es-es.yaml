@@ -378,6 +378,7 @@ common:
   edit-address: Editar Dirección
   new-address: Nueva Dirección
   select-address: Seleccionar Dirección
+  phone-number: Número de Teléfono
 
 resource:
   all: Acceso Total
