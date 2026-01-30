@@ -97,7 +97,7 @@ services:
       # Descomenta para montar código local de la API:
       # - ./api:/fleetbase/api:cached
       # Descomenta para montar paquetes locales:
-      # - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
+      - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
     environment:
       APP_URL: http://localhost:8000
       ENVIRONMENT: development
