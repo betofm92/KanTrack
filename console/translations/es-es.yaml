@@ -2229,7 +2229,7 @@ widget:
     message: Veamos qué puedes hacer para impulsar las operaciones...
     start-task: Iniciar Tarea
   key-metrics:
-    title: Métricas de Fleet-Ops
+    title: Métricas Kantrack
     earnings: Ganancias
     fuel-expenses: Gastos de Combustible
     traveled: Distancia Recorrida
