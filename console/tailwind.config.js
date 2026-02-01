@@ -68,6 +68,11 @@ module.exports = {
                     750: '#283345',
                     850: '#212a38',
                 },
+                'fleet-bg': '#121212',
+                'fleet-card': '#1E1E1E',
+                'fleet-accent': '#F59E0B',
+                'fleet-text-muted': '#A3A3A3',
+                'fleet-border': '#333333',
             },
             boxShadow: {
                 xs: '0 0 0 1px rgba(0,0,0, 0.05)',

@@ -24,6 +24,11 @@
 
 <body>
   {{content-for "body"}}
+  <script>
+    if (window.location.pathname.includes('/info')) {
+      document.write('<style>#boot-loader { display: none !important; }</style>');
+    }
+  </script>
   <div id="boot-loader" class="overloader">
     <div class="loader-container">
       <span class="fleetbase-loader" width="16" height="16"></span>
