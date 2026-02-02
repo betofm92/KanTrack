@@ -47,7 +47,7 @@
 
 .landing-page .card {
     background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--primary);
     border-radius: var(--radius-lg);
     padding: 2rem;
 }
