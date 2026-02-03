@@ -24,7 +24,6 @@ Router.map(function () {
         this.route('for-driver', { path: '/fleet/:public_id' });
         this.route('for-user', { path: '/org/:public_id' });
     });
-    this.route('info');
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
         this.route('notifications');

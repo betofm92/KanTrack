@@ -88,7 +88,7 @@ export default class ConsoleAdminBrandingController extends Controller {
      */
     @action unsetLogo() {
         this.unset(['logo_uuid', 'logo_url']);
-        this.model.set('logo_url', '/images/fleetbase-logo-svg.svg');
+        this.model.set('logo_url', '/images/kantrack-logo-svg.svg');
     }
 
     /**
@@ -107,7 +107,7 @@ export default class ConsoleAdminBrandingController extends Controller {
 
                 // if logo url is null
                 if (this.model.logo_url === null) {
-                    this.model.set('logo_url', '/images/fleetbase-logo-svg.svg');
+                    this.model.set('logo_url', '/images/kantrack-logo-svg.svg');
                 }
 
                 // if icon url is null
