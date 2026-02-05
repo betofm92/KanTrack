@@ -73,5 +73,12 @@ module.exports = function (defaults) {
         });
     }
 
-    return app.toTree([extensions, runtimeConfigTree].filter(Boolean));
+    // Copiar íconos de avatar personalizados a assets/images
+    const path = require('path');
+    const avatarIcons = new Funnel(path.join(__dirname, '..', 'packages', 'fleetops', 'assets', 'images'), {
+        files: ['building-marker.png', 'house-marker.png', 'store-marker.png'],
+        destDir: 'assets/images',
+    });
+
+    return app.toTree([extensions, runtimeConfigTree, avatarIcons].filter(Boolean));
 };
