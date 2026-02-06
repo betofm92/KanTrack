@@ -77,14 +77,14 @@ Router.map(function () {
             path: 'fleet-ops'
         });
 
-        this.mount('@fleetbase/storefront-engine', {
-            as: 'storefront',
-            path: 'storefront'
-        });
-
         this.mount('@fleetbase/registry-bridge-engine', {
             as: 'extensions',
             path: 'extensions'
+        });
+
+        this.mount('@fleetbase/storefront-engine', {
+            as: 'storefront',
+            path: 'storefront'
         });
     });
     this.route('catch', { path: '/*' });
