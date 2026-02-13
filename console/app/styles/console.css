@@ -183,7 +183,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         height: auto !important;
     }
 
-    /* Título "Conductores" antes de los cards */
+    /* Título Dinámico antes de los cards */
     .next-table-wrapper table tbody::before {
         content: "Conductores";
         display: block !important;
@@ -192,6 +192,47 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         color: rgb(255 255 255) !important;
         margin-bottom: 1rem !important;
         padding-left: 0.25rem !important;
+    }
+
+    /* Overrides based on route */
+    body.console-fleet-ops-management-vehicles-index .next-table-wrapper table tbody::before,
+    body[class*="vehicles-index"] .next-table-wrapper table tbody::before {
+        content: "Vehículos" !important;
+    }
+
+    body.console-fleet-ops-management-fleets-index .next-table-wrapper table tbody::before,
+    body[class*="fleets-index"] .next-table-wrapper table tbody::before {
+        content: "Flotas" !important;
+    }
+
+    body.console-fleet-ops-management-vendors-index .next-table-wrapper table tbody::before,
+    body[class*="vendors-index"] .next-table-wrapper table tbody::before {
+        content: "Proveedores" !important;
+    }
+
+    body.console-fleet-ops-management-contacts-index .next-table-wrapper table tbody::before,
+    body[class*="contacts-index"]:not([class*="customers"]) .next-table-wrapper table tbody::before {
+        content: "Contactos" !important;
+    }
+
+    body.console-fleet-ops-management-contacts-customers-index .next-table-wrapper table tbody::before,
+    body[class*="customers-index"] .next-table-wrapper table tbody::before {
+        content: "Clientes" !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody::before,
+    body[class*="places-index"] .next-table-wrapper table tbody::before {
+        content: "Lugares" !important;
+    }
+
+    body.console-fleet-ops-management-fuel-reports-index .next-table-wrapper table tbody::before,
+    body[class*="fuel-reports-index"] .next-table-wrapper table tbody::before {
+        content: "Reportes de Combustible" !important;
+    }
+
+    body.console-fleet-ops-management-issues-index .next-table-wrapper table tbody::before,
+    body[class*="issues-index"] .next-table-wrapper table tbody::before {
+        content: "Incidencias" !important;
     }
 
     /* ═══════════════════════════════════════════════════════════
