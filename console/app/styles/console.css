@@ -235,6 +235,12 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         content: "Incidencias" !important;
     }
 
+    /* Hide static content in map drawer tables */
+    .drawer-modern-bg .next-table-wrapper table tbody::before {
+        content: none !important;
+        display: none !important;
+    }
+
     /* ═══════════════════════════════════════════════════════════
        DRIVER CARDS - PREMIUM DESIGN (Mobile Only)
        Alta especificidad con body[data-theme='dark'] para sobreescribir framework
