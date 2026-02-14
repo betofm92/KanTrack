@@ -527,4 +527,122 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         font-size: 0.75rem !important;
         font-weight: 600 !important;
     }
+
+    /* ═══════════════════════════════════════════════════════════
+       PLACES - Mostrar datos en 3 líneas (Mobile Only)
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Ocultar columnas no necesarias en la vista de lugares */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(9),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(10),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(11),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(12),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(13),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(9),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(10),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(11),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(12),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(13) {
+        display: none !important;
+    }
+
+    /* Línea 1: NAME (td:nth-child(2)) - Tamaño de título */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0 !important;
+        text-align: center !important;
+        background: transparent !important;
+        margin-left: -44px !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2) a,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) a,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) span {
+        font-size: 1.2rem !important;
+        background: transparent !important;
+        display: block !important;
+        max-width: 88% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+    }
+
+    /* Línea 2: STREET1 y STREET2 (td:nth-child(3) y td:nth-child(4)) - Tamaño de subtítulo */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) {
+        display: inline-block !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0 !important;
+        margin-right: 0.5rem !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3) div,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) div,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) div,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) div {
+        color: rgb(209 213 219) !important;
+        font-size: 0.5625rem !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
+        letter-spacing: -0.01em !important;
+        text-transform: uppercase !important;
+    }
+
+    /* Línea 3: CITY, STATE, COUNTRY_NAME (td:nth-child(6), td:nth-child(7), td:nth-child(8)) */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) {
+        display: inline-block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6)::after,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6)::after {
+        content: ", " !important;
+        display: inline !important;
+        color: rgb(156 163 175) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7)::after,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7)::after {
+        content: ", " !important;
+        display: inline !important;
+        color: rgb(156 163 175) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) a,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) a,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8) div,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) a,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) a,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) div {
+        color: rgb(156 163 175) !important;
+        font-size: 0.9375rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        text-transform: uppercase !important;
+    }
 }
