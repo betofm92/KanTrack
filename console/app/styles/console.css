@@ -563,10 +563,10 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2) span,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) a,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) span {
-        font-size: 1.2rem !important;
+        font-size: 1.1rem !important;
         background: transparent !important;
         display: block !important;
-        max-width: 88% !important;
+        max-width: 98% !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -574,11 +574,13 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         margin: 0 auto !important;
     }
 
-    /* Línea 2: STREET1 y STREET2 (td:nth-child(3) y td:nth-child(4)) - Tamaño de subtítulo */
+    /* Línea 2: CITY, STREET1 y STREET2 (td:nth-child(3), td:nth-child(4), td:nth-child(5)) */
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3),
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4),
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5),
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3),
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) {
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4),
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) {
         display: inline-block !important;
         margin-bottom: 0.5rem !important;
         padding: 0 !important;
@@ -589,10 +591,14 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3) div,
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) span,
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) div,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5) span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5) div,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) span,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) div,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) span,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) div {
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) div,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) div {
         color: rgb(209 213 219) !important;
         font-size: 0.5625rem !important;
         font-weight: 500 !important;
@@ -601,13 +607,11 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         text-transform: uppercase !important;
     }
 
-    /* Línea 3: CITY, STATE, COUNTRY_NAME (td:nth-child(6), td:nth-child(7), td:nth-child(8)) */
+    /* Línea 3: STATE, COUNTRY_NAME (td:nth-child(6), td:nth-child(7)) */
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6),
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7),
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8),
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6),
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7),
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) {
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) {
         display: inline-block !important;
         padding: 0 !important;
         margin: 0 !important;
@@ -620,25 +624,14 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         color: rgb(156 163 175) !important;
     }
 
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7)::after,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7)::after {
-        content: ", " !important;
-        display: inline !important;
-        color: rgb(156 163 175) !important;
-    }
-
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) a,
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) span,
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) a,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) div,
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) span,
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8) span,
-    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(8) div,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) a,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) div,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) span,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) a,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) div,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) span,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) span,
-    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(8) div {
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) div {
         color: rgb(156 163 175) !important;
         font-size: 0.9375rem !important;
         font-weight: 500 !important;
