@@ -548,6 +548,13 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         display: none !important;
     }
 
+    /* Ocultar etiqueta heredada "ID INTERNO" en cards de lugares */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4)::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4)::before {
+        content: none !important;
+        display: none !important;
+    }
+
     /* Línea 1: NAME (td:nth-child(2)) - Tamaño de título */
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2),
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) {
@@ -637,5 +644,67 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         font-weight: 500 !important;
         line-height: 1.5 !important;
         text-transform: uppercase !important;
+    }
+
+    /* Places cards: show field name when value is missing */
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3) > div[aria-label="-"] > span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) > div[aria-label="-"] > span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5) > div[aria-label="-"] > span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) > div[aria-label="-"] > span,
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) > div[aria-label="-"] > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) > div[aria-label="-"] > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) > div[aria-label="-"] > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) > div[aria-label="-"] > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) > div[aria-label="-"] > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) > div[aria-label="-"] > span {
+        font-size: 0 !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(3) > div[aria-label="-"] > span::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(3) > div[aria-label="-"] > span::before {
+        content: "CIUDAD";
+        font-size: 0.5625rem !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
+        letter-spacing: -0.01em !important;
+        color: rgb(209 213 219) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) > div[aria-label="-"] > span::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) > div[aria-label="-"] > span::before {
+        content: "CALLE 1";
+        font-size: 0.5625rem !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
+        letter-spacing: -0.01em !important;
+        color: rgb(209 213 219) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5) > div[aria-label="-"] > span::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) > div[aria-label="-"] > span::before {
+        content: "CALLE 2";
+        font-size: 0.5625rem !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
+        letter-spacing: -0.01em !important;
+        color: rgb(209 213 219) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(6) > div[aria-label="-"] > span::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(6) > div[aria-label="-"] > span::before {
+        content: "ESTADO";
+        font-size: 0.9375rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        color: rgb(156 163 175) !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(7) > div[aria-label="-"] > span::before,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(7) > div[aria-label="-"] > span::before {
+        content: "PAIS";
+        font-size: 0.9375rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        color: rgb(156 163 175) !important;
     }
 }
