@@ -880,9 +880,9 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         grid-template-rows: auto auto auto auto auto !important;
-        row-gap: 0.3rem !important;
+        row-gap: 0.285rem !important;
         column-gap: 0 !important;
-        padding: 0.75rem 0 0.95rem !important;
+        padding: 0.7125rem 0 0.9025rem !important;
         border-radius: 1.65rem !important;
         border: 1px solid rgba(71, 85, 105, 0.28) !important;
         background: linear-gradient(160deg, rgba(31, 33, 39, 0.98) 0%, rgba(22, 24, 30, 0.98) 100%) !important;
@@ -967,6 +967,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         text-overflow: ellipsis !important;
         text-align: center !important;
         background: transparent !important;
+        border-radius: 0.62rem !important;
     }
 
     /* Street rows */
@@ -1240,6 +1241,8 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         z-index: auto !important;
         box-shadow: none !important;
         background: transparent !important;
+        border-radius: 0.9rem !important;
+        overflow: hidden !important;
     }
 
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr:hover td:nth-child(2).is-sticky,
@@ -1249,9 +1252,20 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2) a,
     body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) a {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
         background: transparent !important;
         box-shadow: none !important;
-        border: 0 !important;
+        border: 1px solid rgba(71, 85, 105, 0.35) !important;
+        border-radius: 0.9rem !important;
+        overflow: hidden !important;
+    }
+
+    body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(2) a > span,
+    body[class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(2) a > span {
+        display: block !important;
+        border-radius: inherit !important;
     }
 
     /* Place "Y" next to the first street line */
