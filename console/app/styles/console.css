@@ -882,7 +882,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         grid-template-rows: auto auto auto auto auto !important;
         row-gap: 0.3rem !important;
         column-gap: 0 !important;
-        padding: 1rem 0 0.95rem !important;
+        padding: 0.75rem 0 0.95rem !important;
         border-radius: 1.65rem !important;
         border: 1px solid rgba(71, 85, 105, 0.28) !important;
         background: linear-gradient(160deg, rgba(31, 33, 39, 0.98) 0%, rgba(22, 24, 30, 0.98) 100%) !important;
@@ -986,7 +986,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         grid-row: 3 !important;
         width: 94% !important;
         margin: 0 3% 0.42rem 3% !important;
-        padding: 0.43rem 0 0 0 !important;
+        padding: 0.344rem 0 0 0 !important;
         border-top: 0 !important;
         position: relative !important;
     }
