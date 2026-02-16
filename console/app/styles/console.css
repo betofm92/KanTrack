@@ -986,7 +986,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         grid-row: 3 !important;
         width: 94% !important;
         margin: 0 3% 0.42rem 3% !important;
-        padding: 0.62rem 0 0 0 !important;
+        padding: 0.43rem 0 0 0 !important;
         border-top: 0 !important;
         position: relative !important;
     }
@@ -1042,6 +1042,35 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         background-size: contain !important;
         background-position: center !important;
         flex-shrink: 0 !important;
+    }
+
+    /* Dark mode icon tint for streets */
+    body[data-theme='dark'].console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(5) > div::before,
+    body[data-theme='dark'][class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(5) > div::before {
+        background-image: none !important;
+        background-color: rgb(250 204 21) !important;
+        -webkit-mask-image: url('/images/places/location.png') !important;
+        mask-image: url('/images/places/location.png') !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
+    }
+
+    body[data-theme='dark'].console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) > div::before,
+    body[data-theme='dark'][class*="places-index"] .next-table-wrapper table tbody tr td:nth-child(4) > div::before {
+        background-image: none !important;
+        background-color: rgb(245 158 11) !important;
+        -webkit-mask-image: url('/images/places/sign.png') !important;
+        mask-image: url('/images/places/sign.png') !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
     }
 
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody tr td:nth-child(4) span,
