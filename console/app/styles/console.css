@@ -1407,13 +1407,14 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
     }
 
     body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer {
+        bottom: 0 !important;
         z-index: 20 !important;
         background-color: #121212 !important;
         border-top-color: #333333 !important;
         padding-left: 0.75rem !important;
         padding-right: 0.75rem !important;
         padding-top: 0.45rem !important;
-        padding-bottom: 0.45rem !important;
+        padding-bottom: 0 !important;
     }
 
     body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer #fleetbase-pagination {
@@ -1453,5 +1454,25 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         background-color: #263244 !important;
         border-color: #f59e0b !important;
         color: #f8fafc !important;
+    }
+
+    body[class*="console-notifications"] .console-notifications-empty-state {
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        min-height: 100%;
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    body[class*="console-notifications"] .console-notifications-empty-icon {
+        color: #9ca3af !important;
+        opacity: 0.9;
+        margin-top: 0.375rem !important;
+    }
+
+    body[class*="console-notifications"] .console-notifications-empty-state > p {
+        margin-top: 0.75rem !important;
     }
 }

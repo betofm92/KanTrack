@@ -36,14 +36,15 @@
                     </div>
                 </div>
             {{else}}
-                <div class="flex items-center justify-center h-full w-full">
+                <div class="console-notifications-empty-state flex items-center justify-center h-full w-full">
                     <p class="text-base text-gray-800 dark:text-gray-300 italic">{{t "console.notifications.message"}}</p>
+                    <FaIcon @icon="envelope-open" @size="2x" class="console-notifications-empty-icon text-gray-400 dark:text-gray-600 mt-2" />
                 </div>
             {{/each}}
         </div>
     </div>
 </Layout::Section::Body>
 
-<Layout::Section::Footer class="console-notifications-footer" @verticalOffsetElements=".next-mobile-navbar">
+<Layout::Section::Footer class="console-notifications-footer">
         <Pagination @meta={{@model.meta}} @currentPage={{this.page}} @onPageChange={{fn (mut this.page)}} @tfootVerticalOffset="53" @tfootVerticalOffsetElements=".next-view-section-subheader" />
 </Layout::Section::Footer>
