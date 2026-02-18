@@ -1297,6 +1297,75 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 }
 
 @media (max-width: 767px) {
+    body[class*="console"] .notification-tray-panel-container.is-mobile {
+        background: transparent !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel {
+        width: 100% !important;
+        margin-top: 0 !important;
+        border: 1px solid #333333 !important;
+        border-radius: 0.8rem !important;
+        background-color: #121212 !important;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55) !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel > div > div:first-child {
+        background-color: #1e1e1e !important;
+        border-bottom-color: #333333 !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel > div > div:first-child h1 {
+        color: #f3f4f6 !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel > div > .h-48 {
+        background-color: #121212 !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-item {
+        background-color: transparent !important;
+        border: 1px solid transparent !important;
+        border-radius: 0.5rem !important;
+        color: #e5e7eb !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-item h3 {
+        color: #f9fafb !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-item p,
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-item span {
+        color: #9ca3af !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-item:hover {
+        background-color: #1f2937 !important;
+        border-color: #374151 !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .h-48 .text-base {
+        color: #9ca3af !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel > div:last-child {
+        background-color: #1e1e1e !important;
+        border-top-color: #333333 !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-tray-view-all-link {
+        color: #f59e0b !important;
+        background-color: rgba(245, 158, 11, 0.12) !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        border-radius: 0.5rem !important;
+    }
+
+    body[class*="console"] .notification-tray-panel-container.is-mobile > .notification-tray-panel .notification-tray-view-all-link:hover {
+        color: #fbbf24 !important;
+        background-color: rgba(245, 158, 11, 0.2) !important;
+        border-color: rgba(245, 158, 11, 0.45) !important;
+    }
+
     body[class*="console-notifications"] .next-view-section-subheader.is-mobile {
         height: auto !important;
         padding-left: 0.75rem !important;
