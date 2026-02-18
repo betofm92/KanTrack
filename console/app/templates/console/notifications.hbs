@@ -1,4 +1,4 @@
-<Layout::Section::Header @title={{t "common.notifications"}}>
+<Layout::Section::Header @title={{t "common.notifications"}} @actionsWrapperClass="console-notifications-header-actions">
     <Button @icon="check-square" @type="default" @text={{t "console.notifications.select-all"}} {{on "click" this.selectAll}} class="mr-2" />
     <Button @icon="envelope" @type="primary" @text={{t "console.notifications.mark-as-read"}} {{on "click" this.read}} class="mr-2" />
     <Button @icon="trash" @type="danger" @text={{t "common.delete"}} {{on "click" this.delete}} />
@@ -44,8 +44,6 @@
     </div>
 </Layout::Section::Body>
 
-<div class="fixed bottom-0 w-full">
-    <Layout::Section::Footer>
+<Layout::Section::Footer class="console-notifications-footer" @verticalOffsetElements=".next-mobile-navbar">
         <Pagination @meta={{@model.meta}} @currentPage={{this.page}} @onPageChange={{fn (mut this.page)}} @tfootVerticalOffset="53" @tfootVerticalOffsetElements=".next-view-section-subheader" />
-    </Layout::Section::Footer>
-</div>
+</Layout::Section::Footer>

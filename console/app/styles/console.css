@@ -1295,3 +1295,163 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         vertical-align: baseline !important;
     }
 }
+
+@media (max-width: 767px) {
+    body[class*="console-notifications"] .next-view-section-subheader.is-mobile {
+        height: auto !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader.is-mobile > .next-view-section-subheader-left {
+        padding: 0 !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader.is-mobile > .next-view-section-subheader-actions.console-notifications-header-actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.4rem !important;
+        width: 100% !important;
+        align-items: stretch !important;
+        justify-content: stretch !important;
+        overflow: visible !important;
+        padding: 0.5rem 0.4rem 0.65rem 0.4rem !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        border-radius: 0.85rem !important;
+        background: linear-gradient(180deg, rgba(18, 18, 18, 0.98) 0%, rgba(25, 25, 25, 0.98) 100%) !important;
+        --notifications-action-icon-size: 1.12rem;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper {
+        width: 100%;
+        min-width: 0;
+        margin: 0 !important;
+        flex-shrink: 1 !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn {
+        width: 100%;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        padding: 0.35rem 0.2rem !important;
+        font-size: 0.68rem !important;
+        line-height: 0.95rem !important;
+        display: inline-flex !important;
+        flex-direction: column !important;
+        gap: 0.42rem !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 4.9rem !important;
+        border: 1px solid transparent !important;
+        border-radius: 0.7rem !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: #cbd5e1 !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn .btn-icon-wrapper {
+        margin-right: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 2.2rem !important;
+        height: 2.2rem !important;
+        border-radius: 0.55rem !important;
+        border: 1px solid rgba(71, 85, 105, 0.5) !important;
+        background-color: #1f2937 !important;
+        color: #e5e7eb !important;
+        font-size: var(--notifications-action-icon-size) !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn .btn-icon-wrapper svg {
+        margin-right: 0 !important;
+        width: 1em !important;
+        height: 1em !important;
+        min-width: 1em !important;
+        min-height: 1em !important;
+        max-width: 1em !important;
+        max-height: 1em !important;
+        display: block !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn.btn-default .btn-icon-wrapper {
+        background-color: rgba(245, 158, 11, 0.14) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+        color: #f59e0b !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn.btn-primary .btn-icon-wrapper {
+        background-color: #f5c54c !important;
+        border-color: #f8d276 !important;
+        color: #18181b !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn.btn-danger .btn-icon-wrapper {
+        background-color: rgba(239, 68, 68, 0.14) !important;
+        border-color: rgba(239, 68, 68, 0.45) !important;
+        color: #fca5a5 !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn:hover {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(71, 85, 105, 0.45) !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-subheader-actions.console-notifications-header-actions > .btn-wrapper > .btn > span:not(.btn-icon-wrapper) {
+        white-space: normal !important;
+        text-align: center !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer {
+        z-index: 20 !important;
+        background-color: #121212 !important;
+        border-top-color: #333333 !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        padding-top: 0.45rem !important;
+        padding-bottom: 0.45rem !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer #fleetbase-pagination {
+        width: 100%;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer #fleetbase-pagination-button-wrapper {
+        display: flex !important;
+        gap: 0.5rem;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer #fleetbase-pagination-next-button.ml-3 {
+        margin-left: 0 !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer .direction-button {
+        flex: 1 1 0;
+        border-radius: 0.6rem !important;
+        border: 1px solid #334155 !important;
+        background-color: #1f2937 !important;
+        color: #e2e8f0 !important;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        padding: 0.42rem 0.7rem !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer .direction-button.disabled,
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer .direction-button[disabled] {
+        background-color: #1a1f2b !important;
+        border-color: #374151 !important;
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+
+    body[class*="console-notifications"] .next-view-section-footer.console-notifications-footer .direction-button:not(.disabled):hover {
+        background-color: #263244 !important;
+        border-color: #f59e0b !important;
+        color: #f8fafc !important;
+    }
+}
