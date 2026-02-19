@@ -212,7 +212,8 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 
     body.console-fleet-ops-management-contacts-index .next-table-wrapper table tbody::before,
     body[class*="contacts-index"]:not([class*="customers"]) .next-table-wrapper table tbody::before {
-        content: "Contactos" !important;
+        content: none !important;
+        display: none !important;
     }
 
     body.console-fleet-ops-management-contacts-customers-index .next-table-wrapper table tbody::before,
