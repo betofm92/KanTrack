@@ -185,7 +185,7 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 
     /* Título Dinámico antes de los cards */
     .next-table-wrapper table tbody::before {
-        content: "Conductores";
+        content: "";
         display: block !important;
         font-size: 1.5rem !important;
         font-weight: 700 !important;
@@ -195,6 +195,10 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
     }
 
     /* Overrides based on route */
+    body.console-fleet-ops-management-drivers-index .next-table-wrapper table tbody::before,
+    body[class*="drivers-index"] .next-table-wrapper table tbody::before {
+        content: "Conductores" !important;
+    }
     body.console-fleet-ops-management-vehicles-index .next-table-wrapper table tbody::before,
     body[class*="vehicles-index"] .next-table-wrapper table tbody::before {
         content: "Vehículos" !important;
@@ -218,7 +222,8 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 
     body.console-fleet-ops-management-contacts-customers-index .next-table-wrapper table tbody::before,
     body[class*="customers-index"] .next-table-wrapper table tbody::before {
-        content: "Clientes" !important;
+        content: none !important;
+        display: none !important;
     }
 
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody::before,
