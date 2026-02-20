@@ -226,6 +226,37 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         display: none !important;
     }
 
+    /* Campo de búsqueda de contactos más compacto en mobile (30% menos) */
+    #tab-navigation-actions input.form-input.contact-search-input,
+    input.contact-search-input.form-input {
+        width: 179px !important;
+        max-width: 179px !important;
+        flex-grow: 0 !important;
+        font-size: 0.75rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    /* Ajustar elementos del menú de contactos: más a la izquierda y espaciado mínimo */
+    #tab-navigation-actions {
+        padding-right: 0.25rem !important;
+    }
+
+    #tab-navigation-actions > .flex {
+        gap: 0.375rem !important;
+        margin-right: auto !important;
+    }
+
+    /* Ocultar botones de desktop en contactos mobile (solo mostrar dropdown) */
+    #tab-navigation-actions .btn-wrapper.hidden.md\:flex {
+        display: none !important;
+    }
+
+    /* Mostrar dropdown de 3 puntos en contactos mobile */
+    #tab-navigation-actions .btn-wrapper.flex.md\:hidden {
+        display: flex !important;
+    }
+
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody::before,
     body[class*="places-index"] .next-table-wrapper table tbody::before {
         content: "Lugares" !important;
