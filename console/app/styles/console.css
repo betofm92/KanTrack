@@ -268,6 +268,17 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
         padding-right: 0.5rem !important;
     }
 
+    /* Campo de búsqueda de roles en mobile (30% más grande) */
+    .next-view-section-subheader-actions input.form-input.role-search-input,
+    input.role-search-input.form-input {
+        width: 146px !important;
+        max-width: 146px !important;
+        flex-grow: 0 !important;
+        font-size: 0.75rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
     body.console-fleet-ops-management-places-index .next-table-wrapper table tbody::before,
     body[class*="places-index"] .next-table-wrapper table tbody::before {
         content: "Lugares" !important;
