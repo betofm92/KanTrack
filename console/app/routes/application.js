@@ -5,6 +5,7 @@ import { action } from '@ember/object';
 import isElectron from '@fleetbase/ember-core/utils/is-electron';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 import removeBootLoader from '../utils/remove-boot-loader';
+import config from '@fleetbase/console/config/environment';
 
 export default class ApplicationRoute extends Route {
     @service session;
@@ -66,7 +67,7 @@ export default class ApplicationRoute extends Route {
         }
 
         if (shouldOnboard) {
-            return this.router.transitionTo('onboard');
+            return this.router.transitionTo(config.APP.demoMode === true ? 'auth.login' : 'onboard');
         }
     }
 

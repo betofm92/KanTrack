@@ -2,7 +2,9 @@ import Controller, { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { later, cancel } from '@ember/runloop';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
+import config from '@fleetbase/console/config/environment';
 
 export default class AuthLoginController extends Controller {
     @controller('auth.forgot-password') forgotPasswordController;
@@ -13,6 +15,10 @@ export default class AuthLoginController extends Controller {
     @service intl;
     @service fetch;
 
+    get isDemoMode() {
+        return config.APP.demoMode === true;
+    }
+
     /**
      * Whether or not to remember the users session
      *
@@ -20,19 +26,76 @@ export default class AuthLoginController extends Controller {
      */
     @tracked rememberMe = false;
 
-    /**
-     * The identity to authenticate with
-     *
-     * @var {String}
-     */
-    @tracked identity = null;
+    @tracked _identity = null;
+    @tracked _password = null;
+
+    get identity() {
+        if (this._identity === null && this.isDemoMode) {
+            return 'admin@kantrack.ec';
+        }
+        return this._identity;
+    }
+
+    set identity(value) {
+        this._identity = value;
+    }
+
+    get password() {
+        if (this._password === null && this.isDemoMode) {
+            return 'KanTrack2026!';
+        }
+        return this._password;
+    }
+
+    set password(value) {
+        this._password = value;
+    }
 
     /**
-     * The password to authenticate with
+     * True while the demo database reset is in progress.
      *
-     * @var {String}
+     * @var {Boolean}
      */
-    @tracked password = null;
+    @tracked isResetting = false;
+
+    _resetPollTimer = null;
+
+    /**
+     * Begin polling installer/initialize until shouldOnboard is false,
+     * meaning the seeder has finished creating demo data.
+     */
+    startResetCheck() {
+        if (localStorage.getItem('kantrack-demo-resetting') !== 'true') {
+            return;
+        }
+        this.isResetting = true;
+        this._schedulePoll();
+    }
+
+    _schedulePoll() {
+        this._resetPollTimer = later(this, this._pollReset, 5000);
+    }
+
+    async _pollReset() {
+        try {
+            const { shouldOnboard } = await this.fetch.get('installer/initialize');
+            if (!shouldOnboard) {
+                localStorage.removeItem('kantrack-demo-resetting');
+                this.isResetting = false;
+                return;
+            }
+        } catch (_) {
+            // API not yet ready — keep polling
+        }
+        this._schedulePoll();
+    }
+
+    stopResetCheck() {
+        if (this._resetPollTimer) {
+            cancel(this._resetPollTimer);
+            this._resetPollTimer = null;
+        }
+    }
 
     /**
      * Login is validating user input
@@ -86,6 +149,12 @@ export default class AuthLoginController extends Controller {
     @action async login(event) {
         // firefox patch
         event.preventDefault();
+
+        // Do not attempt login while the demo system is resetting
+        if (this.isResetting) {
+            return;
+        }
+
         // get user credentials
         const { identity, password, rememberMe } = this;
 
@@ -140,6 +209,14 @@ export default class AuthLoginController extends Controller {
             // Handle password reset required
             if (error.toString().includes('reset required')) {
                 return this.sendUserForPasswordReset(identity);
+            }
+
+            // In demo mode, "no_user" means the reset job is still seeding
+            if (this.isDemoMode && error?.code === 'no_user') {
+                this.isLoading = false;
+                localStorage.setItem('kantrack-demo-resetting', 'true');
+                this.startResetCheck();
+                return;
             }
 
             return this.failure(error);

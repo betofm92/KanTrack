@@ -24,6 +24,7 @@ module.exports = function (environment) {
             autoboot: false,
             extensions: asArray(getenv('EXTENSIONS')),
             disableRuntimeConfig: toBoolean(getenv('DISABLE_RUNTIME_CONFIG')),
+            demoMode: toBoolean(getenv('DEMO_MODE', false)),
         },
 
         API: {

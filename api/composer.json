@@ -50,6 +50,20 @@
     },
     "repositories": [
         {
+            "type": "path",
+            "url": "../packages/core-api",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
+            "type": "path",
+            "url": "../packages/fleetops",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
             "type": "composer",
             "url": "https://registry.fleetbase.io"
         }

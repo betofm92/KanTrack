@@ -1,0 +1,24 @@
+{{#if this.isDemoMode}}
+    <div
+        class="w-full flex-shrink-0 flex items-center justify-center gap-3 px-4 py-2 bg-gray-900 border-b border-yellow-500/40 text-sm z-50"
+        {{did-insert this.startCountdown}}
+    >
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-bold uppercase tracking-wider text-xs">
+            DEMO
+        </span>
+
+        {{#if this.isResetting}}
+            <span class="text-gray-300">
+                Reiniciando sistema demo...
+            </span>
+        {{else}}
+            <span class="text-gray-400">
+                Sesión demo expira en
+                <span class={{this.countdownClass}}>
+                    {{this.formattedCountdown}}
+                </span>
+                — todos los datos serán restablecidos automáticamente.
+            </span>
+        {{/if}}
+    </div>
+{{/if}}

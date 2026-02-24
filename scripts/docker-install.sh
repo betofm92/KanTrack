@@ -62,10 +62,18 @@ SCHEME_CONSOLE=$([[ "$USE_HTTPS" == true ]] && echo "https" || echo "http")
 
 update_override_with_yq() {
   yq -i "
-    .services.application.environment.APP_KEY         = \"$APP_KEY\" |
-    .services.application.environment.CONSOLE_HOST    = \"$SCHEME_CONSOLE://$HOST:4200\" |
-    .services.application.environment.ENVIRONMENT     = \"$ENVIRONMENT\" |
-    .services.application.environment.APP_DEBUG       = \"$APP_DEBUG\"
+    .services.application.mem_limit                            = \"1g\" |
+    .services.application.mem_reservation                      = \"512m\" |
+    .services.application.environment.APP_KEY                  = \"$APP_KEY\" |
+    .services.application.environment.APP_URL                  = \"$SCHEME_API://$HOST:8000\" |
+    .services.application.environment.CONSOLE_HOST             = \"$SCHEME_CONSOLE://$HOST:4200\" |
+    .services.application.environment.FRONTEND_HOSTS           = \"$SCHEME_CONSOLE://$HOST:4200\" |
+    .services.application.environment.SESSION_DOMAIN           = \"$HOST\" |
+    .services.application.environment.ENVIRONMENT              = \"$ENVIRONMENT\" |
+    .services.application.environment.APP_DEBUG                = \"$APP_DEBUG\" |
+    .services.application.environment.DEMO_MODE                = \"true\" |
+    .services.application.environment.SANCTUM_TOKEN_EXPIRATION = \"10\" |
+    .services.queue.environment.DEMO_MODE                      = \"true\"
   " "$OVERRIDE_FILE"
   echo "✔  $OVERRIDE_FILE updated (yq)"
 }
@@ -74,11 +82,24 @@ create_override() {
   cat > "$OVERRIDE_FILE" <<YML
 services:
   application:
+    mem_limit: 1g
+    mem_reservation: 512m
     environment:
       APP_KEY: "$APP_KEY"
+      APP_URL: "$SCHEME_API://$HOST:8000"
       CONSOLE_HOST: "$SCHEME_CONSOLE://$HOST:4200"
+      FRONTEND_HOSTS: "$SCHEME_CONSOLE://$HOST:4200"
+      SESSION_DOMAIN: "$HOST"
       ENVIRONMENT: "$ENVIRONMENT"
       APP_DEBUG: "$APP_DEBUG"
+      DEMO_MODE: "true"
+      SANCTUM_TOKEN_EXPIRATION: "10"
+    volumes:
+      - ./api/config/sanctum.php:/fleetbase/api/config/sanctum.php
+
+  queue:
+    environment:
+      DEMO_MODE: "true"
 YML
   echo "✔  $OVERRIDE_FILE written"
 }

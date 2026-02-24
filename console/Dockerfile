@@ -1,6 +1,9 @@
 # console/Dockerfile
 FROM node:20-alpine AS builder
 
+ARG DEMO_MODE=false
+ENV DEMO_MODE=$DEMO_MODE
+
 WORKDIR /app
 
 # deps de build

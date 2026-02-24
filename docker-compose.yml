@@ -120,6 +120,7 @@ services:
       dockerfile: ./console/Dockerfile
       args:
         ENVIRONMENT: production
+        DEMO_MODE: "true"
     ports:
       - "4200:4200"
     volumes:
@@ -194,6 +195,7 @@ services:
       REGISTRY_HOST: "https://registry.fleetbase.io"
       REGISTRY_PREINSTALLED_EXTENSIONS: "true"
       OSRM_HOST: "https://router.project-osrm.org"
+      SANCTUM_TOKEN_EXPIRATION: '${DEMO_MINUTES}'
     depends_on:
       - database
       - cache

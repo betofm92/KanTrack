@@ -91,6 +91,12 @@ WORKDIR /fleetbase/api
 RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\": \"$GITHUB_AUTH_KEY\"}}" > auth.json; fi
 RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
 
+# Copy local packages first so Composer path repositories resolve correctly.
+# These are declared as path repositories in api/composer.json and take
+# precedence over registry.fleetbase.io, ensuring our custom code is baked in.
+COPY --chown=www-data:www-data ./packages/core-api /fleetbase/packages/core-api
+COPY --chown=www-data:www-data ./packages/fleetops /fleetbase/packages/fleetops
+
 COPY --chown=www-data:www-data ./api /fleetbase/api
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"

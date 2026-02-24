@@ -82,6 +82,7 @@ services:
       MAIL_PASSWORD: b0e9c1b266e2c0
       MAIL_ENCRYPTION: tls
       MAIL_FROM_ADDRESS: from@example.com
+      DEMO_MODE: 'true'
     depends_on:
       database:
         condition: service_healthy
@@ -126,6 +127,8 @@ services:
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
       OSRM_HOST: https://router.project-osrm.org
+      DEMO_MODE: 'true'
+      SANCTUM_TOKEN_EXPIRATION: '${DEMO_MINUTES}'
     depends_on:
       database:
         condition: service_healthy
