@@ -35,7 +35,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      *
      * @var {Integer}
      */
-    @tracked limit = 20;
+    @tracked limit = 15;
 
     /**
      * The filterable param `sort`

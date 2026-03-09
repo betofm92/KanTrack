@@ -25,7 +25,7 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
      *
      * @var {Integer}
      */
-    @tracked nestedLimit = 20;
+    @tracked nestedLimit = 15;
 
     /**
      * The filterable param `sort`
