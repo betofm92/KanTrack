@@ -98,6 +98,9 @@ services:
       # - ./api:/fleetbase/api:cached
       # Descomenta para montar paquetes locales:
       - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
+      - ./packages/core-api/src/Http/Controllers/Internal/v1/UserController.php:/fleetbase/api/vendor/fleetbase/core-api/src/Http/Controllers/Internal/v1/UserController.php
+      - ./packages/core-api/views/exports:/fleetbase/api/vendor/fleetbase/core-api/views/exports
+      - ./packages/core-api/resources/images:/fleetbase/api/vendor/fleetbase/core-api/resources/images
     environment:
       APP_URL: http://localhost:8000
       ENVIRONMENT: development
