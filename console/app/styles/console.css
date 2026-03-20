@@ -71,6 +71,29 @@ body[data-theme='dark'] #boot-loader>.loader-container>.loading-message {
 /** Responsive mobile styles for Conductores view */
 @media (max-width: 767px) {
 
+    /* Panel de recursos (nuevo vehículo, etc.) ocupa el ancho completo en mobile */
+    .next-content-overlay-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* Reducir padding lateral del body wrapper del content panel en mobile */
+    .next-content-panel-wrapper.bordered-top .next-content-panel-container.is-open .next-content-panel > .next-content-panel-body > .next-content-panel-body-wrapper {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    /* Forzar una sola columna en el formulario de vehículo en mobile */
+    .next-content-overlay-panel .form-wrapper .grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    }
+
+    /* Cada item del grid ocupa el ancho completo en mobile */
+    .next-content-overlay-panel .form-wrapper .grid > * {
+        grid-column: 1 / -1 !important;
+    }
+
     /* Ocultar el título de la sección en mobile */
     .next-view-section-subheader .next-view-section-subheader-title {
         display: none !important;
