@@ -19,6 +19,9 @@
                 </span>
                 — todos los datos serán restablecidos automáticamente.
             </span>
+            {{#if this.loginCount}}
+                <span class="text-gray-600 text-xs">· {{this.loginCount}} visitas</span>
+            {{/if}}
         {{/if}}
     </div>
 {{/if}}

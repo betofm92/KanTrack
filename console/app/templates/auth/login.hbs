@@ -36,6 +36,16 @@
     </div>
 {{/if}}
 
+{{#if this.isDemoAccountExpired}}
+    <div class="mt-6 flex flex-col gap-1 px-4 py-3 rounded-md bg-red-500/10 border border-red-500/30 text-sm text-red-400">
+        <div class="flex items-center gap-2">
+            <FaIcon @icon="clock" />
+            <strong>Cuenta demo expirada</strong>
+        </div>
+        <span>Tu período de demo de 2 días ha concluido. Contacta a soporte para obtener acceso.</span>
+    </div>
+{{/if}}
+
 <form class="mt-8" {{on "submit" this.login}}>
     <input type="hidden" name="remember" value="true" />
     <div class="rounded-md shadow-sm">
@@ -98,9 +108,7 @@
             @disabled={{this.isResetting}}
             @onClick={{this.login}}
         />
-        {{#unless this.isDemoMode}}
-            <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
-        {{/unless}}
+        <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
             <Button
                 @text={{menuItem.title}}

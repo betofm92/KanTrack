@@ -41,6 +41,14 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 cd "$PROJECT_ROOT"
 
+# Read DEMO_MINUTES from .env if present, else default to 10
+DEMO_MINUTES=$(grep -E '^DEMO_MINUTES=' .env 2>/dev/null | cut -d= -f2 | tr -d ' \r' || true)
+DEMO_MINUTES=${DEMO_MINUTES:-10}
+
+# Read DEMO_ACCOUNT_EXPIRY_DAYS from .env if present, else default to 2
+DEMO_ACCOUNT_EXPIRY_DAYS=$(grep -E '^DEMO_ACCOUNT_EXPIRY_DAYS=' .env 2>/dev/null | cut -d= -f2 | tr -d ' \r' || true)
+DEMO_ACCOUNT_EXPIRY_DAYS=${DEMO_ACCOUNT_EXPIRY_DAYS:-2}
+
 ###############################################################################
 # 4. Generate a fresh Laravel APP_KEY
 ###############################################################################
@@ -71,9 +79,11 @@ update_override_with_yq() {
     .services.application.environment.SESSION_DOMAIN           = \"$HOST\" |
     .services.application.environment.ENVIRONMENT              = \"$ENVIRONMENT\" |
     .services.application.environment.APP_DEBUG                = \"$APP_DEBUG\" |
-    .services.application.environment.DEMO_MODE                = \"true\" |
-    .services.application.environment.SANCTUM_TOKEN_EXPIRATION = \"10\" |
-    .services.queue.environment.DEMO_MODE                      = \"true\"
+    .services.application.environment.DEMO_MODE                  = \"true\" |
+    .services.application.environment.SANCTUM_TOKEN_EXPIRATION   = \"$DEMO_MINUTES\" |
+    .services.application.environment.DEMO_ACCOUNT_EXPIRY_DAYS   = \"$DEMO_ACCOUNT_EXPIRY_DAYS\" |
+    .services.queue.environment.DEMO_MODE                        = \"true\" |
+    .services.queue.environment.DEMO_ACCOUNT_EXPIRY_DAYS         = \"$DEMO_ACCOUNT_EXPIRY_DAYS\"
   " "$OVERRIDE_FILE"
   echo "✔  $OVERRIDE_FILE updated (yq)"
 }
@@ -93,13 +103,20 @@ services:
       ENVIRONMENT: "$ENVIRONMENT"
       APP_DEBUG: "$APP_DEBUG"
       DEMO_MODE: "true"
-      SANCTUM_TOKEN_EXPIRATION: "10"
+      SANCTUM_TOKEN_EXPIRATION: "$DEMO_MINUTES"
+      DEMO_ACCOUNT_EXPIRY_DAYS: "$DEMO_ACCOUNT_EXPIRY_DAYS"
     volumes:
+      - ./packages/core-api:/fleetbase/api/vendor/fleetbase/core-api
+      - ./packages/fleetops/server:/fleetbase/api/vendor/fleetbase/fleetops-api/server
       - ./api/config/sanctum.php:/fleetbase/api/config/sanctum.php
 
   queue:
     environment:
       DEMO_MODE: "true"
+      DEMO_ACCOUNT_EXPIRY_DAYS: "$DEMO_ACCOUNT_EXPIRY_DAYS"
+    volumes:
+      - ./packages/core-api:/fleetbase/api/vendor/fleetbase/core-api
+      - ./packages/fleetops/server:/fleetbase/api/vendor/fleetbase/fleetops-api/server
 YML
   echo "✔  $OVERRIDE_FILE written"
 }
@@ -135,7 +152,14 @@ mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
 
 ###############################################################################
-# 7. Start stack, wait for DB, then run deploy
+# 7. Build console image (bakes Ember SPA — required on first run or after UI changes)
+###############################################################################
+echo "⏳  Building KanTrack console image (this may take a few minutes)..."
+docker compose build console
+echo "✔  Console image built"
+
+###############################################################################
+# 8. Start stack, wait for DB, then run deploy
 ###############################################################################
 echo "⏳  Starting KanTrack containers..."
 docker compose up -d
@@ -182,7 +206,7 @@ echo "✔  Database is ready."
 # 7b. Run the deploy script inside the application container
 ###############################################################################
 echo "⏳  Running deploy script inside the application container..."
-docker compose exec application bash -c "./deploy.sh"
+docker compose exec application bash -c "tr -d '\r' < ./deploy.sh | bash"
 docker compose up -d
 
 echo

@@ -102,14 +102,16 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
-      MAIL_FROM_NAME: "Fleetbase"
+      MAIL_FROM_NAME: "KanTrack"
       MAIL_MAILER: "smtp"
       MAIL_HOST: "sandbox.smtp.mailtrap.io"
       MAIL_PORT: 2525
-      MAIL_USERNAME: "79e8629fd3fb41"
-      MAIL_PASSWORD: "b0e9c1b266e2c0"
+      #MAIL_USERNAME: "79e8629fd3fb41"
+      #MAIL_PASSWORD: "b0e9c1b266e2c0"
+      MAIL_USERNAME: "5a597d6f60447f"
+      MAIL_PASSWORD: "e046e3b502ec54"
       MAIL_ENCRYPTION: "tls"
-      MAIL_FROM_ADDRESS: "from@example.com"
+      MAIL_FROM_ADDRESS: "from@kantrack.com"
     depends_on:
       - database
       - cache
@@ -182,15 +184,17 @@ services:
       SESSION_DOMAIN: "kantrack.tech"
 
       BROADCAST_DRIVER: "socketcluster"
-      MAIL_FROM_NAME: "Fleetbase"
+      MAIL_FROM_NAME: "KanTrack"
       MAIL_MAILER: "smtp"
       MAIL_HOST: "sandbox.smtp.mailtrap.io"
       MAIL_PORT: 2525
-      MAIL_USERNAME: "79e8629fd3fb41"
-      MAIL_PASSWORD: "b0e9c1b266e2c0"
+      #MAIL_USERNAME: "79e8629fd3fb41"
+      #MAIL_PASSWORD: "b0e9c1b266e2c0"
+      MAIL_USERNAME: "5a597d6f60447f"
+      MAIL_PASSWORD: "e046e3b502ec54"
       MAIL_ENCRYPTION: "tls"
-      MAIL_FROM_ADDRESS: "from@example.com"
-      APP_NAME: "Fleetbase"
+      MAIL_FROM_ADDRESS: "from@kantrack.com"
+      APP_NAME: "KanTrack"
       LOG_CHANNEL: "daily"
       REGISTRY_HOST: "https://registry.fleetbase.io"
       REGISTRY_PREINSTALLED_EXTENSIONS: "true"

@@ -58,6 +58,13 @@ export default class AuthLoginController extends Controller {
      */
     @tracked isResetting = false;
 
+    /**
+     * True when the demo account's 2-day window has expired.
+     *
+     * @var {Boolean}
+     */
+    @tracked isDemoAccountExpired = false;
+
     _resetPollTimer = null;
 
     /**
@@ -216,6 +223,13 @@ export default class AuthLoginController extends Controller {
                 this.isLoading = false;
                 localStorage.setItem('kantrack-demo-resetting', 'true');
                 this.startResetCheck();
+                return;
+            }
+
+            // Individual demo account has passed its 2-day lifetime
+            if (error?.code === 'demo_account_expired') {
+                this.isLoading = false;
+                this.isDemoAccountExpired = true;
                 return;
             }
 

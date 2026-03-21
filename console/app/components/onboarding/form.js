@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency';
 import OnboardValidations from '../../validations/onboard';
 import lookupValidator from 'ember-changeset-validations';
 import Changeset from 'ember-changeset';
+import config from '@fleetbase/console/config/environment';
 
 export default class OnboardingFormComponent extends Component {
     @service fetch;
@@ -22,7 +23,16 @@ export default class OnboardingFormComponent extends Component {
     @tracked password_confirmation;
     @tracked error;
 
+    get isDemoMode() {
+        return config.APP.demoMode === true;
+    }
+
     get filled() {
+        if (this.isDemoMode) {
+            // eslint-disable-next-line ember/no-get
+            const input = getProperties(this, 'name', 'email', 'password', 'password_confirmation');
+            return Object.values(input).every((val) => !isBlank(val));
+        }
         // eslint-disable-next-line ember/no-get
         const input = getProperties(this, 'name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation');
         return Object.values(input).every((val) => !isBlank(val));
@@ -33,6 +43,13 @@ export default class OnboardingFormComponent extends Component {
 
         // eslint-disable-next-line ember/no-get
         const input = getProperties(this, 'name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation');
+
+        // In demo mode, supply a dummy org name to satisfy the changeset validator
+        // (the backend auto-generates the real name from the user's first name)
+        if (this.isDemoMode && isBlank(input.organization_name)) {
+            input.organization_name = (input.name || '').split(' ')[0] + ' KanTrack Demo';
+        }
+
         const changeset = new Changeset(input, lookupValidator(OnboardValidations), OnboardValidations);
 
         yield changeset.validate();

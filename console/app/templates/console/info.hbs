@@ -1,0 +1,176 @@
+{{page-title "KanTrack — Control Total de tu Flota"}}
+
+<Layout::Section::Body class="h-full">
+    <div class="overflow-y-auto h-full">
+        <div class="landing-page">
+
+            {{! ── Hero ── }}
+            <section class="hero max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8">
+                        <div class="lp-tag">Mission Control</div>
+                        <h1>KANTRACK: <span class="highlight">Control Total</span><br>de tu Flota en Tiempo Real</h1>
+                        <p class="text-lg max-w-lg leading-relaxed">
+                            Conectamos la eficiencia operacional con visibilidad absoluta. Gestiona conductores, rutas y
+                            entregas desde un solo panel — en tiempo real.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                            <button type="button" class="btn-primary">Solicitar Demo</button>
+                            <button type="button" class="btn-secondary">Conocer más</button>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -inset-4 rounded-3xl"
+                            style="background: radial-gradient(ellipse at center, rgba(245,158,11,0.15) 0%, transparent 70%);"></div>
+                        <div class="relative lp-hero-card">
+                            <img src="/images/landing/preview.png" alt="KanTrack Dashboard"
+                                class="w-full rounded-xl shadow-2xl">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{! ── Características Principales ── }}
+            <section class="py-24 max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16 space-y-3">
+                    <div class="lp-tag" style="display:inline-block;">Plataforma</div>
+                    <h2>Características Principales</h2>
+                    <p class="max-w-xl mx-auto">Todo lo que necesitas para operar tu flota con eficiencia, desde un
+                        único panel centralizado.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card space-y-5">
+                        <div class="lp-icon-box">
+                            <FaIcon @icon="map-marked-alt" @size="lg" />
+                        </div>
+                        <h3>Seguimiento GPS en Vivo</h3>
+                        <p>Rastrea cada vehículo con actualizaciones cada 10 segundos. Visibilidad completa de toda
+                            tu operación desde cualquier dispositivo.</p>
+                    </div>
+                    <div class="card space-y-5">
+                        <div class="lp-icon-box">
+                            <FaIcon @icon="route" @size="lg" />
+                        </div>
+                        <h3>Optimización de Rutas</h3>
+                        <p>Reduce tiempos de entrega y consumo de combustible con rutas calculadas automáticamente
+                            según tráfico y prioridades.</p>
+                    </div>
+                    <div class="card space-y-5">
+                        <div class="lp-icon-box">
+                            <FaIcon @icon="chart-line" @size="lg" />
+                        </div>
+                        <h3>Analítica Operacional</h3>
+                        <p>Reportes detallados, KPIs en tiempo real y alertas automáticas para tomar decisiones
+                            basadas en datos, no en suposiciones.</p>
+                    </div>
+                </div>
+            </section>
+
+            {{! ── Cómo funciona ── }}
+            <section class="py-24 lp-section-dark">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-16 space-y-3">
+                        <div class="lp-tag" style="display:inline-block;">Proceso</div>
+                        <h2>¿Cómo funciona KanTrack?</h2>
+                        <p class="max-w-xl mx-auto">Comienza en minutos. Conecta tu flota y obtén visibilidad total
+                            desde el primer día.</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="lp-step">
+                            <div class="lp-step-number">01</div>
+                            <h3>Registra tu Flota</h3>
+                            <p>Da de alta vehículos, conductores y zonas de servicio. La configuración inicial toma
+                                menos de 30 minutos.</p>
+                        </div>
+                        <div class="lp-step">
+                            <div class="lp-step-number">02</div>
+                            <h3>Planifica Operaciones</h3>
+                            <p>Crea órdenes, asigna conductores y define rutas. KanTrack sugiere la asignación
+                                óptima automáticamente.</p>
+                        </div>
+                        <div class="lp-step">
+                            <div class="lp-step-number">03</div>
+                            <h3>Monitorea en Tiempo Real</h3>
+                            <p>Sigue el estado de cada entrega en el mapa. Recibe alertas ante desvíos, demoras o
+                                incidentes.</p>
+                        </div>
+                        <div class="lp-step">
+                            <div class="lp-step-number">04</div>
+                            <h3>Analiza y Optimiza</h3>
+                            <p>Accede a reportes de desempeño, costos e indicadores clave para mejorar tu operación
+                                continuamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{! ── FAQ ── }}
+            <section class="py-24 max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16 space-y-3">
+                    <div class="lp-tag" style="display:inline-block;">Soporte</div>
+                    <h2>FAQ</h2>
+                    <p class="max-w-xl mx-auto">Respuestas a las preguntas más frecuentes sobre KanTrack.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-3">
+                    <details class="lp-faq-item">
+                        <summary>¿Cuántos vehículos puedo registrar en KanTrack?</summary>
+                        <p>KanTrack no tiene límite fijo de vehículos. Puedes registrar flotas pequeñas de 5 unidades
+                            hasta flotas corporativas de miles de vehículos. El plan demo incluye datos de prueba para
+                            que explores todas las funcionalidades.</p>
+                    </details>
+                    <details class="lp-faq-item">
+                        <summary>¿Puedo monitorear mi flota en tiempo real?</summary>
+                        <p>Sí. KanTrack actualiza la posición GPS de cada vehículo cada 10 segundos mediante nuestra
+                            integración con SocketCluster. Recibirás alertas inmediatas ante desvíos de ruta, paradas
+                            no programadas o incidentes reportados por los conductores.</p>
+                    </details>
+                    <details class="lp-faq-item">
+                        <summary>¿Cuánto tiempo toma implementar KanTrack?</summary>
+                        <p>La configuración básica — alta de vehículos, conductores y zonas de servicio — se completa
+                            en menos de 30 minutos. La integración con sistemas externos (ERP, CRM) varía según la
+                            complejidad, pero contamos con API RESTful documentada para simplificar el proceso.</p>
+                    </details>
+                    <details class="lp-faq-item">
+                        <summary>¿KanTrack se integra con mis sistemas actuales?</summary>
+                        <p>Sí. KanTrack expone una API RESTful compatible con JSON:API que permite integrarse con
+                            cualquier ERP, CRM o sistema de gestión de almacenes. También soporta webhooks para
+                            notificaciones en tiempo real hacia sistemas externos.</p>
+                    </details>
+                    <details class="lp-faq-item">
+                        <summary>¿Qué soporte técnico ofrecen?</summary>
+                        <p>Ofrecemos soporte por correo electrónico, documentación técnica completa y una comunidad
+                            activa. Para planes empresariales, incluimos soporte prioritario con SLA garantizado y
+                            un equipo de implementación dedicado.</p>
+                    </details>
+                    <details class="lp-faq-item">
+                        <summary>¿Cómo es el proceso para contratar KanTrack?</summary>
+                        <p>Puedes explorar la plataforma con la cuenta demo actual. Para contratar, contáctanos a
+                            través del formulario de "Solicitar Demo" y un ejecutivo te guiará en la configuración
+                            de tu cuenta de producción y la migración de datos.</p>
+                    </details>
+                </div>
+            </section>
+
+            {{! ── Footer ── }}
+            <footer class="lp-footer">
+                <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-3">
+                        <div class="lp-footer-logo">
+                            <FaIcon @icon="truck" class="text-black text-xs" />
+                        </div>
+                        <span class="font-bold text-white tracking-wide">KANTRACK</span>
+                    </div>
+                    <nav class="flex gap-8 text-xs font-semibold uppercase tracking-widest">
+                        <a href="#" class="nav-link">Términos</a>
+                        <a href="#" class="nav-link">Privacidad</a>
+                        <a href="#" class="nav-link">Cookies</a>
+                    </nav>
+                    <div class="text-xs tracking-widest uppercase">
+                        © 2025 KanTrack Inc.
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+</Layout::Section::Body>

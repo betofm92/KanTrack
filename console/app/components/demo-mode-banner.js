@@ -12,8 +12,10 @@ export default class DemoModeBannerComponent extends Component {
 
     @tracked secondsRemaining = null;
     @tracked isResetting = false;
+    @tracked loginCount = null;
 
     _timer = null;
+    _countdownStarted = false;
 
     // config.APP.demoMode is a static build-time value (no tracking needed).
     // session.isAuthenticated IS properly @tracked by Ember Simple Auth,
@@ -23,8 +25,13 @@ export default class DemoModeBannerComponent extends Component {
     }
 
     get expiresAt() {
-        const raw = get(this.session, 'data.authenticated.expires_at');
-        return raw ? new Date(raw) : null;
+        // Primary: session data (populated on page reload via auth/session, or after normal login)
+        const fromSession = get(this.session, 'data.authenticated.expires_at');
+        if (fromSession) return new Date(fromSession);
+        // Fallback: written synchronously by verify-email on first registration
+        // (ESA's session store.persist() is async so data.authenticated may lag on first mount)
+        const fromStorage = localStorage.getItem('kantrack-demo-expires-at');
+        return fromStorage ? new Date(fromStorage) : null;
     }
 
     get formattedCountdown() {
@@ -46,10 +53,18 @@ export default class DemoModeBannerComponent extends Component {
     @action
     startCountdown() {
         schedule('afterRender', this, () => {
-            if (!this.isDemoMode || !this.expiresAt) {
+            if (!this.isDemoMode || this._countdownStarted) {
                 return;
             }
+            if (!this.expiresAt) {
+                // Session data not yet hydrated — retry shortly
+                later(this, this.startCountdown, 250);
+                return;
+            }
+            this._countdownStarted = true;
             localStorage.setItem('kantrack-is-demo', 'true');
+            const rawCount = get(this.session, 'data.authenticated.login_count');
+            this.loginCount = rawCount != null ? parseInt(rawCount, 10) : null;
             this._tick();
         });
     }

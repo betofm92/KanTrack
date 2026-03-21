@@ -1,31 +1,24 @@
 :root {
-    /* Colores de Fondo */
     --bg-main: #121212;
-    /* Fondo profundo */
     --bg-card: #1E1E1E;
-    /* Elevación de tarjetas y secciones */
+    --bg-section-alt: #181818;
     --bg-footer: #0A0A0A;
-    /* Fondo más oscuro para contraste */
 
-    /* Colores de Acento (Ámbar/Oro) */
     --primary: #F59E0B;
     --primary-hover: #D97706;
-    --primary-low-alpha: rgba(245, 158, 11, 0.1);
+    --primary-low-alpha: rgba(245, 158, 11, 0.12);
 
-    /* Colores de Texto */
     --text-main: #FFFFFF;
-    /* Títulos y énfasis */
     --text-muted: #A3A3A3;
-    /* Párrafos y descripciones */
     --text-on-primary: #000000;
-    /* Texto sobre botones amarillos */
 
-    /* Bordes y Divisores */
-    --border-color: #333333;
+    --border-color: #2A2A2A;
+    --border-accent: #F59E0B;
     --radius-lg: 16px;
     --radius-md: 8px;
 }
 
+/* ── Base ── */
 .landing-page {
     background-color: var(--bg-main);
     color: var(--text-muted);
@@ -41,59 +34,196 @@
     line-height: 1.2;
 }
 
-.landing-page .highlight {
+.landing-page h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
+.landing-page h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.landing-page h3 { font-size: 1.2rem; }
+
+.landing-page .highlight { color: var(--primary); }
+
+/* ── Tag / Pill ── */
+.landing-page .lp-tag {
+    display: inline-block;
+    padding: 4px 14px;
+    background-color: var(--primary-low-alpha);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
     color: var(--primary);
 }
 
-.landing-page .card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--primary);
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-}
-
+/* ── Buttons ── */
 .landing-page .btn-primary {
     background-color: var(--primary);
     color: var(--text-on-primary);
-    padding: 12px 24px;
+    padding: 12px 28px;
     border-radius: var(--radius-md);
     border: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease, transform 0.1s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
-
 .landing-page .btn-primary:hover {
     background-color: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
 .landing-page .btn-secondary {
     background: transparent;
     color: var(--text-main);
-    padding: 12px 24px;
+    padding: 12px 28px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     font-weight: 500;
+    font-size: 0.875rem;
     cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
-
 .landing-page .btn-secondary:hover {
-    border-color: var(--text-main);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary);
+    background: var(--primary-low-alpha);
 }
 
-/* Specific layout styles for the landing page */
+/* ── Hero ── */
 .landing-page .hero {
-    padding: 6rem 0;
+    padding: 5rem 0 4rem;
 }
 
+.landing-page .lp-hero-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+/* ── Feature Cards ── */
+.landing-page .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.landing-page .card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-3px);
+}
+
+.landing-page .lp-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: var(--primary-low-alpha);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* ── How it works ── */
+.landing-page .lp-section-dark {
+    background-color: var(--bg-section-alt);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.landing-page .lp-step {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem 0;
+}
+
+.landing-page .lp-step-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.9;
+}
+
+/* ── FAQ ── */
+.landing-page .lp-faq-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.landing-page .lp-faq-item[open] {
+    border-color: var(--border-accent);
+}
+
+.landing-page .lp-faq-item summary {
+    padding: 1.1rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.landing-page .lp-faq-item summary::-webkit-details-marker { display: none; }
+
+.landing-page .lp-faq-item summary::after {
+    content: '+';
+    font-size: 1.4rem;
+    color: var(--primary);
+    font-weight: 400;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.landing-page .lp-faq-item[open] summary::after {
+    transform: rotate(45deg);
+}
+
+.landing-page .lp-faq-item p {
+    padding: 0 1.5rem 1.2rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0;
+    padding-top: 1rem;
+}
+
+.landing-page .lp-faq-item summary:hover {
+    color: var(--primary);
+}
+
+/* ── Nav links ── */
 .landing-page .nav-link {
     color: var(--text-muted);
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.2s;
+}
+.landing-page .nav-link:hover { color: var(--primary); }
+
+/* ── Footer ── */
+.landing-page .lp-footer {
+    background-color: var(--bg-footer);
+    border-top: 1px solid var(--border-color);
 }
 
-.landing-page .nav-link:hover {
-    color: var(--primary);
+.landing-page .lp-footer-logo {
+    width: 28px;
+    height: 28px;
+    background-color: var(--primary);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
