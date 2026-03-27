@@ -1,0 +1,74 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+
+        {{#if @options.subscription}}
+            <div class="mb-4 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm">
+                <p class="font-medium mb-1">Suscripción actual</p>
+                <p>Plan: <strong>{{@options.subscription.plan_slug}}</strong></p>
+                <p>Estado: <strong>{{@options.subscription.status}}</strong></p>
+                {{#if @options.subscription.expires_at}}
+                    <p>Vence: <strong>{{@options.subscription_expires_display}}</strong></p>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name="Monto pagado *" @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.form.amount}} class="form-input w-full" min="0" step="0.01" placeholder="0.00" />
+            </InputGroup>
+            <InputGroup @name="Moneda" @wrapperClass="col-span-1">
+                <select class="form-select w-full" onchange={{action (mut @options.form.currency) value="target.value"}}>
+                    <option value="USD" selected={{eq @options.form.currency "USD"}}>USD</option>
+                    <option value="EUR" selected={{eq @options.form.currency "EUR"}}>EUR</option>
+                </select>
+            </InputGroup>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name="Método de pago" @wrapperClass="col-span-1">
+                <select class="form-select w-full" onchange={{action (mut @options.form.payment_method) value="target.value"}}>
+                    <option value="">— Seleccionar —</option>
+                    <option value="bank_transfer" selected={{eq @options.form.payment_method "bank_transfer"}}>Transferencia bancaria</option>
+                    <option value="cash" selected={{eq @options.form.payment_method "cash"}}>Efectivo</option>
+                    <option value="card" selected={{eq @options.form.payment_method "card"}}>Tarjeta</option>
+                    <option value="paypal" selected={{eq @options.form.payment_method "paypal"}}>PayPal</option>
+                    <option value="other" selected={{eq @options.form.payment_method "other"}}>Otro</option>
+                </select>
+            </InputGroup>
+            <InputGroup @name="Ciclo de facturación" @wrapperClass="col-span-1">
+                <select class="form-select w-full" onchange={{action (mut @options.form.billing_cycle) value="target.value"}}>
+                    <option value="monthly" selected={{eq @options.form.billing_cycle "monthly"}}>Mensual</option>
+                    <option value="annual" selected={{eq @options.form.billing_cycle "annual"}}>Anual</option>
+                    <option value="custom" selected={{eq @options.form.billing_cycle "custom"}}>Personalizado</option>
+                </select>
+            </InputGroup>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name="Referencia / N° recibo" @wrapperClass="col-span-1">
+                <Input @type="text" @value={{@options.form.reference}} class="form-input w-full" placeholder="Nro. transferencia o recibo" />
+            </InputGroup>
+            <InputGroup @name="Fecha de pago" @wrapperClass="col-span-1">
+                <Input @type="date" @value={{@options.form.paid_at}} class="form-input w-full" />
+            </InputGroup>
+        </div>
+
+        {{#if (eq @options.form.billing_cycle "custom")}}
+            <InputGroup @name="Nueva fecha de vencimiento">
+                <Input @type="date" @value={{@options.form.period_end}} class="form-input w-full" />
+            </InputGroup>
+        {{/if}}
+
+        <InputGroup @name="Notas">
+            <Textarea @value={{@options.form.notes}} class="form-input w-full" rows="2" placeholder="Observaciones del pago..." />
+        </InputGroup>
+
+        <div class="mt-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-sm text-blue-700 dark:text-blue-300">
+            Al registrar el pago, la fecha de vencimiento se extenderá automáticamente según el ciclo de facturación seleccionado.
+            {{#if (eq @options.form.billing_cycle "monthly")}}+1 mes{{/if}}
+            {{#if (eq @options.form.billing_cycle "annual")}}+12 meses{{/if}}
+            {{#if (eq @options.form.billing_cycle "custom")}}hasta la fecha indicada{{/if}}
+        </div>
+
+    </div>
+</Modal::Default>

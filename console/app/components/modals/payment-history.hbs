@@ -1,0 +1,38 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+
+        {{#if @options.payments.length}}
+            <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700 text-xs text-gray-500 uppercase">
+                            <th class="text-left pb-2 pr-3">Fecha</th>
+                            <th class="text-left pb-2 pr-3">Plan</th>
+                            <th class="text-left pb-2 pr-3">Monto</th>
+                            <th class="text-left pb-2 pr-3">Método</th>
+                            <th class="text-left pb-2 pr-3">Referencia</th>
+                            <th class="text-left pb-2">Período</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each @options.payments as |payment|}}
+                            <tr class="border-b border-gray-100 dark:border-gray-800">
+                                <td class="py-2 pr-3 whitespace-nowrap">{{payment.paid_at}}</td>
+                                <td class="py-2 pr-3">{{payment.plan_name}}</td>
+                                <td class="py-2 pr-3 font-medium">{{payment.currency}} {{payment.amount}}</td>
+                                <td class="py-2 pr-3 capitalize">{{payment.payment_method}}</td>
+                                <td class="py-2 pr-3 text-gray-400">{{payment.reference}}</td>
+                                <td class="py-2 text-xs text-gray-400 whitespace-nowrap">
+                                    {{payment.period_start}} → {{payment.period_end}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p class="text-center text-gray-500 py-6">Sin pagos registrados.</p>
+        {{/if}}
+
+    </div>
+</Modal::Default>

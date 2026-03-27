@@ -336,6 +336,7 @@ common:
   meta: Meta
   resource-created-success: New {resource} created successfully.
   resource-created-success-name: New {resource} ({resourceName}) created successfully.
+  resource-saved-success: "{resource} {resourceName} saved successfully."
   resource-updated-success: >-
     {resource} ({resourceName}) updated successfully.
   resource-action-success: >-

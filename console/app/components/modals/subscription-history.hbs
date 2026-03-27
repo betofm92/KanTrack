@@ -1,0 +1,64 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+
+        {{#if @options.loading}}
+            <div class="flex items-center justify-center py-8">
+                <span class="text-gray-500">Cargando historial...</span>
+            </div>
+        {{else if @options.history.length}}
+            <div class="space-y-2 max-h-96 overflow-y-auto">
+                {{#each @options.history as |entry|}}
+                    <div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-semibold capitalize">
+                                {{#if (eq entry.event "assigned")}}Asignación de plan{{/if}}
+                                {{#if (eq entry.event "updated")}}Actualización{{/if}}
+                                {{#if (eq entry.event "suspended")}}Suspensión{{/if}}
+                                {{#if (eq entry.event "activated")}}Activación{{/if}}
+                                {{#if (eq entry.event "cancelled")}}Cancelación{{/if}}
+                                {{#if (eq entry.event "payment_registered")}}Pago registrado{{/if}}
+                            </span>
+                            <span class="text-xs text-gray-400">{{entry.created_at}}</span>
+                        </div>
+                        {{#if entry.new_plan_slug}}
+                            <p class="text-xs text-gray-500">
+                                Plan:
+                                {{#if entry.previous_plan_slug}}
+                                    <span class="line-through">{{entry.previous_plan_slug}}</span> →
+                                {{/if}}
+                                <strong>{{entry.new_plan_slug}}</strong>
+                            </p>
+                        {{/if}}
+                        {{#if entry.new_status}}
+                            <p class="text-xs text-gray-500">
+                                Estado:
+                                {{#if entry.previous_status}}
+                                    <span class="line-through">{{entry.previous_status}}</span> →
+                                {{/if}}
+                                <strong>{{entry.new_status}}</strong>
+                            </p>
+                        {{/if}}
+                        {{#if entry.new_expires_at}}
+                            <p class="text-xs text-gray-500">
+                                Vencimiento:
+                                {{#if entry.previous_expires_at}}
+                                    <span class="line-through">{{entry.previous_expires_at}}</span> →
+                                {{/if}}
+                                <strong>{{entry.new_expires_at}}</strong>
+                            </p>
+                        {{/if}}
+                        {{#if entry.notes}}
+                            <p class="text-xs text-gray-400 mt-1 italic">{{entry.notes}}</p>
+                        {{/if}}
+                        {{#if entry.performed_by}}
+                            <p class="text-xs text-gray-400">Por: {{entry.performed_by}}</p>
+                        {{/if}}
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <p class="text-center text-gray-500 py-6">Sin historial registrado.</p>
+        {{/if}}
+
+    </div>
+</Modal::Default>

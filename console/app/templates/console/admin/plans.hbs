@@ -1,0 +1,13 @@
+{{page-title "Planes"}}
+
+<Layout::Section::Header @title="Planes de suscripción">
+    <Button @icon="plus" @text="Nuevo Plan" @onClick={{this.createPlan}} />
+</Layout::Section::Header>
+
+<Layout::Section::Body>
+    <Table
+        @rows={{@model}}
+        @columns={{this.columns}}
+        @selectable={{false}}
+    />
+</Layout::Section::Body>

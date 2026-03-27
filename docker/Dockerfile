@@ -93,6 +93,12 @@ RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.ca
 
 COPY --chown=www-data:www-data ./api /fleetbase/api
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
+
+# Overwrite vendor packages with local source (picks up all custom changes automatically)
+COPY --chown=www-data:www-data ./packages/core-api/src /fleetbase/api/vendor/fleetbase/core-api/src
+COPY --chown=www-data:www-data ./packages/core-api/migrations /fleetbase/api/vendor/fleetbase/core-api/migrations
+COPY --chown=www-data:www-data ./packages/fleetops/server/src /fleetbase/api/vendor/fleetbase/fleetops-api/server/src
+
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
 RUN test -f /fleetbase/api/vendor/autoload.php && echo "✓ autoload.php creado correctamente" || (echo "✗ ERROR: autoload.php no encontrado" && ls -la /fleetbase/api/vendor/ && exit 1)
 
