@@ -160,6 +160,8 @@ services:
       #  - ./api/.env:/fleetbase/api/.env
       # - ./api:/fleetbase/api:cached
       # - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
+    volumes:
+      - fonts_cache:/fleetbase/api/storage/fonts
     environment:
       # URL pública detrás de Nginx + SSL
       APP_URL: "https://kantrack.tech"
@@ -243,4 +245,6 @@ networks:
 
 volumes:
   mysql_data:
+    driver: local
+  fonts_cache:
     driver: local
