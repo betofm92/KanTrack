@@ -12,7 +12,8 @@
       "@fleetbase/fleetops-engine": "link:packages/fleetops",
       "@fleetbase/iam-engine": "link:packages/iam-engine",
       "@fleetbase/storefront-engine": "link:packages/storefront",
-      "@fleetbase/registry-bridge-engine": "link:packages/registry-bridge"
+      "@fleetbase/registry-bridge-engine": "link:packages/registry-bridge",
+      "@fleetbase/core-api": "link:packages/core-api"
     }
   }
 }
