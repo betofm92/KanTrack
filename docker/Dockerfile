@@ -96,18 +96,14 @@ COPY --chown=www-data:www-data ./packages /fleetbase/packages
 COPY --chown=www-data:www-data ./api /fleetbase/api
 
 # Inject path repositories into composer.json so local packages take priority over the registry
-RUN su www-data -s /bin/sh -c "
-  php -r '
-    \$cfg = json_decode(file_get_contents(\"composer.json\"), true);
-    array_unshift(\$cfg[\"repositories\"], [\"type\" => \"path\", \"url\" => \"../../packages/*\", \"options\" => [\"symlink\" => false]]);
-    file_put_contents(\"composer.json\", json_encode(\$cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-  '"
+RUN su www-data -s /bin/sh -c "php -r '\$cfg = json_decode(file_get_contents(\"composer.json\"), true); array_unshift(\$cfg[\"repositories\"], [\"type\" => \"path\", \"url\" => \"../../packages/*\", \"options\" => [\"symlink\" => false]]); file_put_contents(\"composer.json\", json_encode(\$cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'"
 
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
 
 # Overwrite vendor packages with local source (picks up all custom changes automatically)
 COPY --chown=www-data:www-data ./packages/core-api/src /fleetbase/api/vendor/fleetbase/core-api/src
 COPY --chown=www-data:www-data ./packages/core-api/migrations /fleetbase/api/vendor/fleetbase/core-api/migrations
+COPY --chown=www-data:www-data ./packages/core-api/views /fleetbase/api/vendor/fleetbase/core-api/views
 COPY --chown=www-data:www-data ./packages/fleetops/server/src /fleetbase/api/vendor/fleetbase/fleetops-api/server/src
 
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
