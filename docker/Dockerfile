@@ -105,6 +105,7 @@ COPY --chown=www-data:www-data ./packages/core-api/src /fleetbase/api/vendor/fle
 COPY --chown=www-data:www-data ./packages/core-api/migrations /fleetbase/api/vendor/fleetbase/core-api/migrations
 COPY --chown=www-data:www-data ./packages/core-api/views /fleetbase/api/vendor/fleetbase/core-api/views
 COPY --chown=www-data:www-data ./packages/fleetops/server/src /fleetbase/api/vendor/fleetbase/fleetops-api/server/src
+COPY --chown=www-data:www-data ./packages/fleetops/server/resources/views /fleetbase/api/vendor/fleetbase/fleetops-api/server/resources/views
 
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
 RUN test -f /fleetbase/api/vendor/autoload.php && echo "✓ autoload.php creado correctamente" || (echo "✗ ERROR: autoload.php no encontrado" && ls -la /fleetbase/api/vendor/ && exit 1)
