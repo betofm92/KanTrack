@@ -147,8 +147,7 @@
         "overrides": {
             "ember-engines": "0.9.0",
             "@fleetbase/ember-core": "latest",
-            "@fleetbase/ember-ui": "0.3.6",
-            "@fleetbase/fleetops-data": "latest"
+            "@fleetbase/ember-ui": "0.3.6"
         }
     },
     "prettier": {

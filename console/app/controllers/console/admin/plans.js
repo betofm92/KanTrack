@@ -8,13 +8,14 @@ export default class ConsoleAdminPlansController extends Controller {
     @service notifications;
     @service modalsManager;
     @service router;
+    @service intl;
 
     @tracked table;
 
     get columns() {
         return [
             {
-                label: 'Plan',
+                label: this.intl.t('admin.plans.index.plan-column'),
                 valuePath: 'name',
                 resizable: true,
                 sortable: true,
@@ -28,37 +29,37 @@ export default class ConsoleAdminPlansController extends Controller {
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Precio/mes',
+                label: this.intl.t('admin.plans.index.price-month-column'),
                 valuePath: 'price_monthly',
                 width: '130px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Precio/año',
+                label: this.intl.t('admin.plans.index.price-year-column'),
                 valuePath: 'price_annual',
                 width: '130px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Vehículos',
+                label: this.intl.t('admin.plans.index.vehicles-column'),
                 valuePath: 'max_vehicles',
                 width: '110px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Conductores',
+                label: this.intl.t('admin.plans.index.drivers-column'),
                 valuePath: 'max_drivers',
                 width: '110px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Usuarios',
+                label: this.intl.t('admin.plans.index.users-column'),
                 valuePath: 'max_users',
                 width: '100px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Estado',
+                label: this.intl.t('admin.plans.index.status-column'),
                 valuePath: 'is_active',
                 width: '100px',
                 cellComponent: 'table/cell/base',
@@ -69,13 +70,13 @@ export default class ConsoleAdminPlansController extends Controller {
                 ddButtonText: false,
                 ddButtonIcon: 'ellipsis-h',
                 ddButtonIconPrefix: 'fas',
-                ddMenuLabel: 'Acciones del plan',
+                ddMenuLabel: this.intl.t('admin.plans.index.plan-actions-label'),
                 cellClassNames: 'overflow-visible',
                 wrapperClass: 'flex items-center justify-end mx-2',
                 width: '60px',
                 actions: [
                     {
-                        label: 'Editar plan',
+                        label: this.intl.t('admin.plans.index.edit-action'),
                         icon: 'edit',
                         fn: this.editPlan,
                     },
@@ -83,7 +84,7 @@ export default class ConsoleAdminPlansController extends Controller {
                         separator: true,
                     },
                     {
-                        label: 'Eliminar plan',
+                        label: this.intl.t('admin.plans.index.delete-action'),
                         icon: 'trash',
                         fn: this.deletePlan,
                     },
@@ -98,8 +99,8 @@ export default class ConsoleAdminPlansController extends Controller {
 
     @action createPlan() {
         this.modalsManager.show('modals/plan-form', {
-            title: 'Nuevo Plan',
-            acceptButtonText: 'Crear Plan',
+            title: this.intl.t('admin.plans.index.new-title'),
+            acceptButtonText: this.intl.t('admin.plans.index.create-button'),
             acceptButtonIcon: 'plus',
             plan: {
                 slug: '',
@@ -126,7 +127,7 @@ export default class ConsoleAdminPlansController extends Controller {
                 modal.startLoading();
                 try {
                     await this.fetch.post('admin/plans', modal.getOption('plan'));
-                    this.notifications.success('Plan creado correctamente.');
+                    this.notifications.success(this.intl.t('admin.plans.index.plan-created-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -138,15 +139,15 @@ export default class ConsoleAdminPlansController extends Controller {
 
     @action editPlan(plan) {
         this.modalsManager.show('modals/plan-form', {
-            title: `Editar Plan: ${plan.name}`,
-            acceptButtonText: 'Guardar',
+            title: this.intl.t('admin.plans.index.edit-modal-title', { name: plan.name }),
+            acceptButtonText: this.intl.t('common.save'),
             acceptButtonIcon: 'save',
             plan: Object.assign({}, plan),
             confirm: async (modal) => {
                 modal.startLoading();
                 try {
                     await this.fetch.put(`admin/plans/${plan.slug}`, modal.getOption('plan'));
-                    this.notifications.success('Plan actualizado.');
+                    this.notifications.success(this.intl.t('admin.plans.index.plan-updated-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -158,16 +159,16 @@ export default class ConsoleAdminPlansController extends Controller {
 
     @action deletePlan(plan) {
         this.modalsManager.confirm({
-            title: `Eliminar plan "${plan.name}"`,
-            body: '¿Seguro que deseas eliminar este plan? No se puede eliminar si hay organizaciones suscritas.',
-            acceptButtonText: 'Eliminar',
+            title: this.intl.t('admin.plans.index.delete-modal-title', { name: plan.name }),
+            body: this.intl.t('admin.plans.index.delete-confirm-body'),
+            acceptButtonText: this.intl.t('common.delete'),
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
             confirm: async (modal) => {
                 modal.startLoading();
                 try {
                     await this.fetch.delete(`admin/plans/${plan.slug}`);
-                    this.notifications.success('Plan eliminado.');
+                    this.notifications.success(this.intl.t('admin.plans.index.plan-deleted-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {

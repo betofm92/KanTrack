@@ -9,6 +9,7 @@
       "@fleetbase/ember-ui": "link:packages/ember-ui",
       "ember-engines": "0.9.0",
       "@fleetbase/ember-core": "link:packages/ember-core",
+      "@fleetbase/fleetops-data": "link:packages/fleetops-data",
       "@fleetbase/fleetops-engine": "link:packages/fleetops",
       "@fleetbase/iam-engine": "link:packages/iam-engine",
       "@fleetbase/storefront-engine": "link:packages/storefront",

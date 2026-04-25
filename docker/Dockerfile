@@ -127,5 +127,7 @@ CMD ["php", "artisan", "queue:work --max-jobs=50 --max-memory=64"]
 
 # Application stage
 FROM base AS app
+ENV APP_DEBUG=false
+ENV OCTANE_WORKERS=4
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --workers=1 --max-requests=250 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=${OCTANE_WORKERS} --max-requests=250 --port=8000 --host=0.0.0.0"]

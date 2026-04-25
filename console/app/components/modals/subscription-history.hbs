@@ -3,7 +3,7 @@
 
         {{#if @options.loading}}
             <div class="flex items-center justify-center py-8">
-                <span class="text-gray-500">Cargando historial...</span>
+                <span class="text-gray-500">{{t "modals.subscription-history.loading"}}</span>
             </div>
         {{else if @options.history.length}}
             <div class="space-y-2 max-h-96 overflow-y-auto">
@@ -11,18 +11,18 @@
                     <div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">
                         <div class="flex items-center justify-between mb-1">
                             <span class="font-semibold capitalize">
-                                {{#if (eq entry.event "assigned")}}Asignación de plan{{/if}}
-                                {{#if (eq entry.event "updated")}}Actualización{{/if}}
-                                {{#if (eq entry.event "suspended")}}Suspensión{{/if}}
-                                {{#if (eq entry.event "activated")}}Activación{{/if}}
-                                {{#if (eq entry.event "cancelled")}}Cancelación{{/if}}
-                                {{#if (eq entry.event "payment_registered")}}Pago registrado{{/if}}
+                                {{#if (eq entry.event "assigned")}}{{t "modals.subscription-history.event-plan-assigned"}}{{/if}}
+                                {{#if (eq entry.event "updated")}}{{t "modals.subscription-history.event-updated"}}{{/if}}
+                                {{#if (eq entry.event "suspended")}}{{t "modals.subscription-history.event-suspended"}}{{/if}}
+                                {{#if (eq entry.event "activated")}}{{t "modals.subscription-history.event-activated"}}{{/if}}
+                                {{#if (eq entry.event "cancelled")}}{{t "modals.subscription-history.event-cancelled"}}{{/if}}
+                                {{#if (eq entry.event "payment_registered")}}{{t "modals.subscription-history.event-payment"}}{{/if}}
                             </span>
                             <span class="text-xs text-gray-400">{{entry.created_at}}</span>
                         </div>
                         {{#if entry.new_plan_slug}}
                             <p class="text-xs text-gray-500">
-                                Plan:
+                                {{t "modals.subscription-history.plan-label"}}
                                 {{#if entry.previous_plan_slug}}
                                     <span class="line-through">{{entry.previous_plan_slug}}</span> →
                                 {{/if}}
@@ -31,7 +31,7 @@
                         {{/if}}
                         {{#if entry.new_status}}
                             <p class="text-xs text-gray-500">
-                                Estado:
+                                {{t "modals.subscription-history.status-label"}}
                                 {{#if entry.previous_status}}
                                     <span class="line-through">{{entry.previous_status}}</span> →
                                 {{/if}}
@@ -40,7 +40,7 @@
                         {{/if}}
                         {{#if entry.new_expires_at}}
                             <p class="text-xs text-gray-500">
-                                Vencimiento:
+                                {{t "modals.subscription-history.expiry-label"}}
                                 {{#if entry.previous_expires_at}}
                                     <span class="line-through">{{entry.previous_expires_at}}</span> →
                                 {{/if}}
@@ -51,13 +51,13 @@
                             <p class="text-xs text-gray-400 mt-1 italic">{{entry.notes}}</p>
                         {{/if}}
                         {{#if entry.performed_by}}
-                            <p class="text-xs text-gray-400">Por: {{entry.performed_by}}</p>
+                            <p class="text-xs text-gray-400">{{t "modals.subscription-history.by-label"}} {{entry.performed_by}}</p>
                         {{/if}}
                     </div>
                 {{/each}}
             </div>
         {{else}}
-            <p class="text-center text-gray-500 py-6">Sin historial registrado.</p>
+            <p class="text-center text-gray-500 py-6">{{t "modals.subscription-history.empty-message"}}</p>
         {{/if}}
 
     </div>

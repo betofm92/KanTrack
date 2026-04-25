@@ -95,18 +95,18 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'User Actions',
+            ddMenuLabel: 'Acciones de usuario',
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '9%',
             actions: [
                 {
-                    label: 'Impersonate',
+                    label: 'Suplantar usuario',
                     icon: 'user-secret',
                     fn: this.impersonateUser,
                 },
                 {
-                    label: 'Change Password',
+                    label: 'Cambiar contraseña',
                     icon: 'lock-open',
                     fn: this.changeUserPassword,
                 },
@@ -129,7 +129,7 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             const { token } = await this.fetch.post('auth/impersonate', { user: user.id });
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
-            this.notifications.info(`Now impersonating ${user.email}...`);
+            this.notifications.info(`Suplantando a ${user.email}...`);
             later(
                 this,
                 () => {

@@ -129,13 +129,13 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                 valuePath: 'createdAt',
             },
             {
-                label: 'Plan',
+                label: this.intl.t('admin.organizations.index.plan-column'),
                 valuePath: 'subscription_plan_name',
                 width: '120px',
                 cellComponent: 'table/cell/base',
             },
             {
-                label: 'Estado suscripción',
+                label: this.intl.t('admin.organizations.index.subscription-status-column'),
                 valuePath: 'subscription_status',
                 width: '140px',
                 cellComponent: 'table/cell/base',
@@ -146,19 +146,27 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                 ddButtonText: false,
                 ddButtonIcon: 'ellipsis-h',
                 ddButtonIconPrefix: 'fas',
-                ddMenuLabel: 'Acciones de organización',
+                ddMenuLabel: this.intl.t('admin.organizations.index.organization-actions-label'),
                 cellClassNames: 'overflow-visible',
                 wrapperClass: 'flex items-center justify-end mx-2',
                 sticky: 'right',
                 width: 60,
                 actions: [
                     {
-                        label: 'Asignar / Editar Plan',
+                        label: this.intl.t('admin.organizations.index.edit-action'),
+                        icon: 'edit',
+                        fn: this.editOrganization,
+                    },
+                    {
+                        separator: true,
+                    },
+                    {
+                        label: this.intl.t('admin.organizations.index.assign-plan-action'),
                         icon: 'tags',
                         fn: this.managePlan,
                     },
                     {
-                        label: 'Registrar pago',
+                        label: this.intl.t('admin.organizations.index.register-payment-action'),
                         icon: 'dollar-sign',
                         fn: this.registerPayment,
                     },
@@ -166,12 +174,12 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                         separator: true,
                     },
                     {
-                        label: 'Historial de pagos',
+                        label: this.intl.t('admin.organizations.index.payment-history-action'),
                         icon: 'receipt',
                         fn: this.viewPaymentHistory,
                     },
                     {
-                        label: 'Historial de suscripción',
+                        label: this.intl.t('admin.organizations.index.subscription-history-action'),
                         icon: 'history',
                         fn: this.viewSubscriptionHistory,
                     },
@@ -179,12 +187,12 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                         separator: true,
                     },
                     {
-                        label: 'Suspender organización',
+                        label: this.intl.t('admin.organizations.index.suspend-action'),
                         icon: 'ban',
                         fn: this.suspendOrganization,
                     },
                     {
-                        label: 'Activar organización',
+                        label: this.intl.t('admin.organizations.index.activate-action'),
                         icon: 'circle-check',
                         fn: this.activateOrganization,
                     },
@@ -192,9 +200,17 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                         separator: true,
                     },
                     {
-                        label: 'Ver uso de recursos',
+                        label: this.intl.t('admin.organizations.index.resource-usage-action'),
                         icon: 'chart-bar',
                         fn: this.viewResourceUsage,
+                    },
+                    {
+                        separator: true,
+                    },
+                    {
+                        label: this.intl.t('admin.organizations.index.delete-action'),
+                        icon: 'trash',
+                        fn: this.deleteOrganization,
                     },
                 ],
                 sortable: false,
@@ -213,9 +229,10 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      */
     @action createOrganization() {
         this.modalsManager.show('modals/edit-organization', {
-            title: 'Nueva Organización',
-            acceptButtonText: 'Crear',
+            title: this.intl.t('admin.organizations.index.new-title'),
+            acceptButtonText: this.intl.t('common.create'),
             acceptButtonIcon: 'plus',
+            showAdminUser: true,
             organization: {
                 name: null,
                 description: null,
@@ -224,12 +241,28 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                 country: null,
                 timezone: null,
             },
+            adminUser: {
+                name: null,
+                email: null,
+                password: null,
+            },
             confirm: async (modal) => {
                 modal.startLoading();
                 const { name, description, phone, currency, country, timezone } = modal.getOption('organization');
+                const { name: admin_name, email: admin_email, password: admin_password } = modal.getOption('adminUser');
                 try {
-                    await this.fetch.post('auth/create-organization', { name, description, phone, currency, country, timezone });
-                    this.notifications.success('Organización creada correctamente.');
+                    await this.fetch.post('auth/create-organization', {
+                        name,
+                        description,
+                        phone,
+                        currency,
+                        country,
+                        timezone,
+                        admin_name,
+                        admin_email,
+                        admin_password,
+                    });
+                    this.notifications.success(this.intl.t('admin.organizations.index.org-created-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -282,8 +315,8 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         }
 
         this.modalsManager.show('modals/assign-plan', {
-            title: `Plan: ${company.name}`,
-            acceptButtonText: 'Guardar',
+            title: this.intl.t('admin.organizations.index.plan-modal-title', { name: company.name }),
+            acceptButtonText: this.intl.t('common.save'),
             acceptButtonIcon: 'save',
             subscription,
             subscription_expires_display: subscription?.expires_at ? subscription.expires_at.substring(0, 10) : null,
@@ -305,7 +338,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                     } else {
                         await this.fetch.post(`admin/companies/${company.public_id}/subscription`, form);
                     }
-                    this.notifications.success('Suscripción actualizada.');
+                    this.notifications.success(this.intl.t('admin.organizations.index.subscription-updated-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -317,16 +350,16 @@ export default class ConsoleAdminOrganizationsController extends Controller {
 
     @action async suspendOrganization(company) {
         this.modalsManager.confirm({
-            title: `Suspender "${company.name}"`,
-            body: '¿Seguro que deseas suspender esta organización? Sus usuarios no podrán crear nuevos recursos.',
-            acceptButtonText: 'Suspender',
+            title: `${this.intl.t('admin.organizations.index.suspend-action')}: ${company.name}`,
+            body: this.intl.t('admin.organizations.index.suspend-confirm-body'),
+            acceptButtonText: this.intl.t('admin.organizations.index.suspend-button'),
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'ban',
             confirm: async (modal) => {
                 modal.startLoading();
                 try {
                     await this.fetch.post(`admin/companies/${company.public_id}/suspend`);
-                    this.notifications.warning(`${company.name} suspendida.`);
+                    this.notifications.warning(this.intl.t('admin.organizations.index.suspended-notification', { name: company.name }));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -338,15 +371,15 @@ export default class ConsoleAdminOrganizationsController extends Controller {
 
     @action async activateOrganization(company) {
         this.modalsManager.confirm({
-            title: `Activar "${company.name}"`,
-            body: 'La organización volverá a tener acceso completo según su plan.',
-            acceptButtonText: 'Activar',
+            title: `${this.intl.t('admin.organizations.index.activate-action')}: ${company.name}`,
+            body: this.intl.t('admin.organizations.index.activate-confirm-body'),
+            acceptButtonText: this.intl.t('admin.organizations.index.activate-button'),
             acceptButtonIcon: 'circle-check',
             confirm: async (modal) => {
                 modal.startLoading();
                 try {
                     await this.fetch.post(`admin/companies/${company.public_id}/activate`);
-                    this.notifications.success(`${company.name} activada.`);
+                    this.notifications.success(this.intl.t('admin.organizations.index.activated-notification', { name: company.name }));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -370,8 +403,8 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         const today = new Date().toISOString().substring(0, 10);
 
         this.modalsManager.show('modals/register-payment', {
-            title: `Registrar pago: ${company.name}`,
-            acceptButtonText: 'Registrar',
+            title: this.intl.t('admin.organizations.index.register-payment-title', { name: company.name }),
+            acceptButtonText: this.intl.t('common.save'),
             acceptButtonIcon: 'dollar-sign',
             subscription,
             subscription_expires_display: subscription?.expires_at ? subscription.expires_at.substring(0, 10) : null,
@@ -390,7 +423,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                 try {
                     const form = modal.getOption('form');
                     await this.fetch.post(`admin/companies/${company.public_id}/payments`, form);
-                    this.notifications.success('Pago registrado y suscripción actualizada.');
+                    this.notifications.success(this.intl.t('admin.organizations.index.payment-registered-notification'));
                     modal.done();
                     return this.router.refresh();
                 } catch (error) {
@@ -413,9 +446,9 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         }
 
         this.modalsManager.show('modals/payment-history', {
-            title: `Historial de pagos: ${company.name}`,
+            title: this.intl.t('admin.organizations.index.payment-history-title', { name: company.name }),
             hideAcceptButton: true,
-            declineButtonText: 'Cerrar',
+            declineButtonText: this.intl.t('common.close'),
             payments,
         });
     }
@@ -432,10 +465,70 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         }
 
         this.modalsManager.show('modals/subscription-history', {
-            title: `Historial de suscripción: ${company.name}`,
+            title: this.intl.t('admin.organizations.index.subscription-history-title', { name: company.name }),
             hideAcceptButton: true,
-            declineButtonText: 'Cerrar',
+            declineButtonText: this.intl.t('common.close'),
             history,
+        });
+    }
+
+    @action editOrganization(company) {
+        this.modalsManager.show('modals/edit-organization', {
+            title: this.intl.t('admin.organizations.index.edit-modal-title', { name: company.name }),
+            acceptButtonText: this.intl.t('common.save'),
+            acceptButtonIcon: 'save',
+            showAdminUser: true,
+            isEditing: true,
+            organization: {
+                name: company.name,
+                description: company.description,
+                phone: company.phone,
+                currency: company.currency,
+            },
+            adminUser: {
+                name: company.owner?.name ?? '',
+                email: company.owner?.email ?? '',
+                password: null,
+            },
+            confirm: async (modal) => {
+                modal.startLoading();
+                const { name, description, phone, currency } = modal.getOption('organization');
+                const { name: admin_name, email: admin_email, password: admin_password } = modal.getOption('adminUser');
+                try {
+                    const payload = { name, description, phone, currency, admin_name, admin_email };
+                    if (admin_password) {
+                        payload.admin_password = admin_password;
+                    }
+                    await this.fetch.put(`admin/companies/${company.public_id}`, payload);
+                    this.notifications.success(this.intl.t('admin.organizations.index.org-updated-notification'));
+                    modal.done();
+                    return this.router.refresh();
+                } catch (error) {
+                    modal.stopLoading();
+                    return this.notifications.serverError(error);
+                }
+            },
+        });
+    }
+
+    @action deleteOrganization(company) {
+        this.modalsManager.confirm({
+            title: this.intl.t('admin.organizations.index.delete-modal-title', { name: company.name }),
+            body: this.intl.t('admin.organizations.index.delete-confirm-body'),
+            acceptButtonText: this.intl.t('common.delete'),
+            acceptButtonScheme: 'danger',
+            acceptButtonIcon: 'trash',
+            confirm: async (modal) => {
+                modal.startLoading();
+                try {
+                    await this.fetch.delete(`admin/companies/${company.public_id}`);
+                    this.notifications.success(this.intl.t('admin.organizations.index.org-deleted-notification', { name: company.name }));
+                    modal.done();
+                    return this.router.refresh();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                }
+            },
         });
     }
 
@@ -450,9 +543,9 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         }
 
         this.modalsManager.show('modals/resource-usage', {
-            title: `Uso de recursos: ${company.name}`,
+            title: this.intl.t('admin.organizations.index.resource-usage-title', { name: company.name }),
             hideAcceptButton: true,
-            declineButtonText: 'Cerrar',
+            declineButtonText: this.intl.t('common.close'),
             usage,
         });
     }

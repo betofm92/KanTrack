@@ -582,6 +582,8 @@ dashboard:
   save-dashboard: Guardar Tablero
   you-cannot-delete-this-dashboard: No puedes eliminar este tablero.
   are-you-sure-you-want-delete-dashboard: ¿Estás seguro de eliminar {dashboardName}?
+  name-label: Nombre del tablero
+  name-help-text: Ingresa el nombre de tu tablero
 
 dashboard-widget-panel:
   widget-name: >-
@@ -896,7 +898,21 @@ layout:
 
 fleet-ops:
   extension-name: Fleet-Ops
-  
+  resource:
+    product: Producto
+    products: Productos
+  common:
+    sku: SKU
+    quantity: Cantidad en Stock
+    available: Disponible
+    reserved: Reservado
+    unit-cost: Costo Unitario
+    msrp: Precio de Venta
+    reorder-point: Punto de Reorden
+    inventory-method: Método de Inventario
+    add-product: Agregar Producto
+    products-used: Productos Utilizados
+    no-products: Sin productos asociados
 
 menu:
   operations: Operaciones
@@ -914,6 +930,9 @@ menu:
   places: Lugares
   fuel-reports: Informes de Combustible
   issues: Incidencias
+  inventory: Inventario
+  products: Productos
+  stock: Stock
   maintenance: Mantenimiento
   work-orders: Órdenes de Trabajo
   equipment: Equipamiento
@@ -1774,25 +1793,6 @@ avatar-picker:
   select-avatar: Seleccionar avatar
   select-for-preview: Seleccionar para vista previa
 
-admin:
-  navigator-app:
-    title: App Navegador
-    name: URL de Vinculación de Instancia
-    message: Use esta URL para vincular la app Navegador oficial a esta instancia de {companyName}. Al abrir esta URL en un dispositivo móvil, se abrirá la app Navegador y se actualizará su configuración y marca.
-    settings: Configuraciones de Entidad
-    select-input: Permitir al conductor actualizar detalles de entidad
-    driver-settings: Configuraciones de Conductor
-    description: Habilitar conductor a bordo
-    upload-document: Requerir al conductor subir documentos
-    upload-body: Agregar documentos
-    document: Documento
-  avatar-management:
-    upload-avatar: Subir Avatar
-    view-avatar: Ver Avatar
-    vehicles: Vehículos
-    drivers: Conductores
-    places: Lugares
-
 entity-field-editing-settings:
   entitiy-field-editing-settings: Configuraciones de Edición de Campos de Entidad
   entity-field-editing-settings-help-text: Estas configuraciones determinan qué campos de una entidad son editables por un conductor a través de la App Navegador
@@ -2225,6 +2225,106 @@ modals:
     optionally: Opcionalmente dé a la zona una descripción.
     description-zone: Descripción de Zona
 
+  leave-organization:
+    owner-with-members-title: "Como propietario de {name}, salir requiere nominar un nuevo propietario."
+    owner-with-members-instructions: Selecciona un miembro de la lista para transferir la propiedad antes de continuar.
+    select-new-owner-label: Seleccionar nuevo propietario
+    select-member-placeholder: Seleccionar miembro
+    sole-owner-title: "Eres el único propietario de {name}."
+    sole-owner-warning: Al salir, la organización y todos sus datos serán eliminados permanentemente.
+    sole-owner-confirm: "¿Estás seguro de que deseas continuar?"
+    sole-owner-irreversible: Esta acción no se puede deshacer.
+    member-title: "¿Estás seguro de que deseas salir de la organización {name}?"
+    member-warning: Ya no tendrás acceso a sus recursos ni configuraciones.
+  edit-organization:
+    org-name: Nombre de la organización
+    description: Descripción
+    phone: Teléfono de la organización
+    currency: Moneda
+    admin-user-section: Usuario administrador de la organización
+    full-name: Nombre completo
+    email: Correo electrónico
+    password: Contraseña
+    password-help: Dejar en blanco para no cambiar
+  assign-plan:
+    current-subscription: Suscripción actual
+    plan-label: Plan
+    select-plan-placeholder: "— Seleccionar plan —"
+    billing-cycle-label: Ciclo de facturación
+    cycle-monthly: Mensual
+    cycle-annual: Anual
+    cycle-custom: Personalizado
+    status-label: Estado
+    status-trial: Trial
+    status-active: Activo
+    status-suspended: Suspendido
+    extra-vehicles-label: Vehículos extra
+    expiry-date-label: Fecha de vencimiento (vacío = no expira)
+    notes-label: Notas internas
+    notes-placeholder: Notas del administrador...
+  register-payment:
+    current-subscription: Suscripción actual
+    amount-label: Monto pagado *
+    currency-label: Moneda
+    payment-method-label: Método de pago
+    select-method-placeholder: "— Seleccionar —"
+    method-transfer: Transferencia bancaria
+    method-cash: Efectivo
+    method-card: Tarjeta
+    method-paypal: PayPal
+    method-other: Otro
+    billing-cycle-label: Ciclo de facturación
+    reference-label: Referencia / N° recibo
+    reference-placeholder: Nro. transferencia o recibo
+    payment-date-label: Fecha de pago
+    new-expiry-label: Nueva fecha de vencimiento
+    notes-label: Notas
+    notes-placeholder: Observaciones del pago...
+    auto-extend-info: Al registrar el pago, la fecha de vencimiento se extenderá automáticamente según el ciclo de facturación seleccionado.
+  payment-history:
+    date-column: Fecha
+    plan-column: Plan
+    amount-column: Monto
+    method-column: Método
+    reference-column: Referencia
+    period-column: Período
+    empty-message: Sin pagos registrados.
+  subscription-history:
+    loading: Cargando historial...
+    event-plan-assigned: Asignación de plan
+    event-updated: Actualización
+    event-suspended: Suspensión
+    event-activated: Activación
+    event-cancelled: Cancelación
+    event-payment: Pago registrado
+    plan-label: "Plan:"
+    status-label: "Estado:"
+    expiry-label: "Vencimiento:"
+    by-label: "Por:"
+    empty-message: Sin historial registrado.
+  resource-usage:
+    limit-label: LÍMITE
+  plan-form:
+    slug-label: Slug (identificador único)
+    slug-placeholder: "ej: premium"
+    name-label: Nombre
+    name-placeholder: "ej: Premium"
+    description-label: Descripción
+    monthly-price-label: Precio mensual (USD)
+    annual-price-label: Precio anual (USD)
+    max-vehicles-label: Máx. vehículos
+    max-drivers-label: Máx. conductores
+    max-users-label: Máx. usuarios
+    trial-days-label: Días de trial
+    feature-api: API REST
+    feature-webhooks: Webhooks
+    feature-reports: Reportes
+    feature-driver-mgmt: Gestión de conductores
+    feature-analytics: Analítica avanzada
+    feature-custom-price: Precio personalizado (corporativo)
+    sort-order-label: Orden (sort_order)
+    active-label: Plan activo
+
 widget:
   fleet-ops-quickstart:
     message: Veamos qué puedes hacer para impulsar las operaciones...
@@ -2459,3 +2559,81 @@ settings:
 
 permission:
   description: "Permiso {action} {resource} en {extension}"
+
+admin:
+  organizations:
+    index:
+      plan-column: Plan
+      subscription-status-column: Estado suscripción
+      organization-actions-label: Acciones de organización
+      edit-action: Editar organización
+      assign-plan-action: Asignar / Editar Plan
+      register-payment-action: Registrar pago
+      payment-history-action: Historial de pagos
+      subscription-history-action: Historial de suscripción
+      suspend-action: Suspender organización
+      activate-action: Activar organización
+      resource-usage-action: Ver uso de recursos
+      delete-action: Eliminar organización
+      new-title: Nueva Organización
+      plan-modal-title: "Plan: {name}"
+      edit-modal-title: "Editar: {name}"
+      suspend-confirm-body: "¿Seguro que deseas suspender esta organización? Perderá acceso al sistema."
+      suspend-button: Suspender
+      suspended-notification: "{name} suspendida."
+      activate-confirm-body: La organización volverá a tener acceso completo según su plan.
+      activate-button: Activar
+      activated-notification: "{name} activada."
+      register-payment-title: "Registrar pago: {name}"
+      payment-registered-notification: Pago registrado y suscripción actualizada.
+      payment-history-title: "Historial de pagos: {name}"
+      subscription-history-title: "Historial de suscripción: {name}"
+      subscription-updated-notification: Suscripción actualizada.
+      org-created-notification: Organización creada correctamente.
+      org-updated-notification: Organización actualizada.
+      resource-usage-title: "Uso de recursos: {name}"
+      delete-modal-title: "Eliminar \"{name}\""
+      delete-confirm-body: "¿Seguro que deseas eliminar la organización? Esta acción no se puede deshacer."
+      org-deleted-notification: "{name} eliminada."
+      user-actions-label: Acciones de usuario
+      impersonate-action: Suplantar usuario
+      change-password-action: Cambiar contraseña
+      impersonating-notification: "Suplantando a {email}..."
+  plans:
+    index:
+      plan-column: Plan
+      price-month-column: Precio/mes
+      price-year-column: Precio/año
+      vehicles-column: Vehículos
+      drivers-column: Conductores
+      users-column: Usuarios
+      status-column: Estado
+      plan-actions-label: Acciones del plan
+      edit-action: Editar plan
+      delete-action: Eliminar plan
+      new-title: Nuevo Plan
+      create-button: Crear Plan
+      edit-modal-title: "Editar Plan: {name}"
+      plan-created-notification: Plan creado correctamente.
+      plan-updated-notification: Plan actualizado.
+      delete-modal-title: "Eliminar plan \"{name}\""
+      delete-confirm-body: "¿Seguro que deseas eliminar este plan? Esta acción no se puede deshacer."
+      plan-deleted-notification: Plan eliminado.
+
+  navigator-app:
+    title: App Navegador
+    name: URL de Vinculación de Instancia
+    message: Use esta URL para vincular la app Navegador oficial a esta instancia de {companyName}. Al abrir esta URL en un dispositivo móvil, se abrirá la app Navegador y se actualizará su configuración y marca.
+    settings: Configuraciones de Entidad
+    select-input: Permitir al conductor actualizar detalles de entidad
+    driver-settings: Configuraciones de Conductor
+    description: Habilitar conductor a bordo
+    upload-document: Requerir al conductor subir documentos
+    upload-body: Agregar documentos
+    document: Documento
+  avatar-management:
+    upload-avatar: Subir Avatar
+    view-avatar: Ver Avatar
+    vehicles: Vehículos
+    drivers: Conductores
+    places: Lugares

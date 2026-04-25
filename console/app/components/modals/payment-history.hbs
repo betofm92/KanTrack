@@ -6,12 +6,12 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-gray-200 dark:border-gray-700 text-xs text-gray-500 uppercase">
-                            <th class="text-left pb-2 pr-3">Fecha</th>
-                            <th class="text-left pb-2 pr-3">Plan</th>
-                            <th class="text-left pb-2 pr-3">Monto</th>
-                            <th class="text-left pb-2 pr-3">Método</th>
-                            <th class="text-left pb-2 pr-3">Referencia</th>
-                            <th class="text-left pb-2">Período</th>
+                            <th class="text-left pb-2 pr-3">{{t "modals.payment-history.date-column"}}</th>
+                            <th class="text-left pb-2 pr-3">{{t "modals.payment-history.plan-column"}}</th>
+                            <th class="text-left pb-2 pr-3">{{t "modals.payment-history.amount-column"}}</th>
+                            <th class="text-left pb-2 pr-3">{{t "modals.payment-history.method-column"}}</th>
+                            <th class="text-left pb-2 pr-3">{{t "modals.payment-history.reference-column"}}</th>
+                            <th class="text-left pb-2">{{t "modals.payment-history.period-column"}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,7 +31,7 @@
                 </table>
             </div>
         {{else}}
-            <p class="text-center text-gray-500 py-6">Sin pagos registrados.</p>
+            <p class="text-center text-gray-500 py-6">{{t "modals.payment-history.empty-message"}}</p>
         {{/if}}
 
     </div>

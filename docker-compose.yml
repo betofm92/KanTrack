@@ -2,8 +2,8 @@ services:
   cache:
     image: redis:4-alpine
     restart: unless-stopped
-    mem_limit: 48m
-    mem_reservation: 24m
+    mem_limit: 96m
+    mem_reservation: 48m
     pids_limit: 100
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -14,18 +14,18 @@ services:
   database:
     image: mysql:8.0-oracle
     restart: always
-    mem_limit: 512m
-    mem_reservation: 256m
+    mem_limit: 1024m
+    mem_reservation: 512m
     pids_limit: 512
     ulimits:
       nofile:
         soft: 65535
         hard: 65535
       nproc: 4096
-   # ports:
-   #   - "3306:3306"
+    ports:
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "KanTrack25*"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "kantrack"
     volumes:
       - ./docker/database/:/docker-entrypoint-initdb.d/
@@ -40,8 +40,8 @@ services:
   socket:
     image: socketcluster/socketcluster:v17.4.0
     restart: unless-stopped
-    mem_limit: 96m
-    mem_reservation: 48m
+    mem_limit: 192m
+    mem_reservation: 96m
     pids_limit: 256
     ulimits:
       nofile:
@@ -58,15 +58,15 @@ services:
     image: local-fleetbase-api:latest
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
-    mem_limit: 64m
-    mem_reservation: 32m
+    mem_limit: 256m
+    mem_reservation: 128m
     pids_limit: 128
     tmpfs:
       - /tmp:size=64m
     healthcheck:
       disable: true
     environment:
-      DATABASE_URL: "mysql://root:KanTrack25*@database/kantrack"
+      DATABASE_URL: "${DATABASE_URL}"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -96,20 +96,27 @@ services:
       timeout: 10s
       retries: 3
     environment:
-      DATABASE_URL: "mysql://root:KanTrack25*@database/kantrack"
+      DATABASE_URL: "${DATABASE_URL}"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
-      MAIL_FROM_NAME: "Fleetbase"
-      MAIL_MAILER: "smtp"
-      MAIL_HOST: "sandbox.smtp.mailtrap.io"
-      MAIL_PORT: 2525
-      MAIL_USERNAME: "79e8629fd3fb41"
-      MAIL_PASSWORD: "b0e9c1b266e2c0"
-      MAIL_ENCRYPTION: "tls"
-      MAIL_FROM_ADDRESS: "from@example.com"
+      APP_URL: "${APP_URL}"
+      APP_NAME: "${APP_NAME:-KanTrack}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_LOCALE: "${APP_LOCALE:-es}"
+      CONSOLE_HOST: "${CONSOLE_HOST}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME}"
+      MAIL_MAILER: "${MAIL_MAILER}"
+      MAIL_HOST: "${MAIL_HOST}"
+      MAIL_PORT: "${MAIL_PORT}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      MAIL_ENCRYPTION: "${MAIL_ENCRYPTION}"
+      MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS}"
+      FIREBASE_CREDENTIALS: "${FIREBASE_CREDENTIALS}"
     depends_on:
       - database
       - cache
@@ -123,10 +130,8 @@ services:
     ports:
       - "4200:4200"
     volumes:
-      # IMPORTANTE: El archivo debe existir en esta ruta
       - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json:ro
     environment:
-      # Variables para depuración (interno, no dominio público)
       API_HOST: "http://application:8000"
       SOCKET_HOST: "socket"
     healthcheck:
@@ -141,8 +146,8 @@ services:
       socket:
         condition: service_started
     restart: unless-stopped
-    mem_limit: 96m
-    mem_reservation: 48m
+    mem_limit: 64m
+    mem_reservation: 32m
     pids_limit: 128
     ulimits:
       nofile:
@@ -156,40 +161,37 @@ services:
 
   application:
     image: local-fleetbase-api:latest
-      # command: php artisan serve --host=0.0.0.0 --port=8000
-      #  - ./api/.env:/fleetbase/api/.env
-      # - ./api:/fleetbase/api:cached
-      # - ./packages/fleetops:/fleetbase/api/vendor/fleetbase/fleetops-api
     environment:
-      # URL pública detrás de Nginx + SSL
-      APP_URL: "https://kantrack.tech"
-      #ENVIRONMENT: "production"
+      APP_URL: "${APP_URL}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_ENV: "${APP_ENV:-production}"
+      ENVIRONMENT: "${APP_ENV:-production}"
 
-      DATABASE_URL: "mysql://root:KanTrack25*@database/kantrack"
+      DATABASE_URL: "${DATABASE_URL}"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
-
-      # Dónde vive la consola vista por el usuario (dominio público)
-      CONSOLE_HOST: "https://kantrack.tech"
-      FRONTEND_HOSTS: "https://kantrack.tech"
-
       REDIS_URL: tcp://cache
 
-      # Dominio de sesión para cookies
-      SESSION_DOMAIN: "kantrack.tech"
+      CONSOLE_HOST: "${CONSOLE_HOST}"
+      FRONTEND_HOSTS: "${FRONTEND_HOSTS}"
+
+      SESSION_DOMAIN: "${SESSION_DOMAIN}"
+      SESSION_DRIVER: "redis"
 
       BROADCAST_DRIVER: "socketcluster"
-      MAIL_FROM_NAME: "Fleetbase"
-      MAIL_MAILER: "smtp"
-      MAIL_HOST: "sandbox.smtp.mailtrap.io"
-      MAIL_PORT: 2525
-      MAIL_USERNAME: "79e8629fd3fb41"
-      MAIL_PASSWORD: "b0e9c1b266e2c0"
-      MAIL_ENCRYPTION: "tls"
-      MAIL_FROM_ADDRESS: "from@example.com"
-      APP_NAME: "Fleetbase"
+      FIREBASE_CREDENTIALS: "${FIREBASE_CREDENTIALS}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME}"
+      MAIL_MAILER: "${MAIL_MAILER}"
+      MAIL_HOST: "${MAIL_HOST}"
+      MAIL_PORT: "${MAIL_PORT}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      MAIL_ENCRYPTION: "${MAIL_ENCRYPTION}"
+      MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS}"
+      APP_NAME: "${APP_NAME:-KanTrack}"
+      APP_LOCALE: "${APP_LOCALE:-es}"
       LOG_CHANNEL: "daily"
       REGISTRY_HOST: "https://registry.fleetbase.io"
       REGISTRY_PREINSTALLED_EXTENSIONS: "true"
@@ -201,8 +203,8 @@ services:
     networks:
       - default
     restart: always
-    mem_limit: 512m
-    mem_reservation: 256m
+    mem_limit: 1024m
+    mem_reservation: 512m
     pids_limit: 512
     ulimits:
       nofile:
