@@ -91,7 +91,13 @@ WORKDIR /fleetbase/api
 RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\": \"$GITHUB_AUTH_KEY\"}}" > auth.json; fi
 RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
 
+# Copy local packages so composer can install them as path repos
+COPY --chown=www-data:www-data ./packages /fleetbase/packages
 COPY --chown=www-data:www-data ./api /fleetbase/api
+
+# Inject path repositories into composer.json so local packages take priority over the registry
+RUN su www-data -s /bin/sh -c "php -r '\$cfg = json_decode(file_get_contents(\"composer.json\"), true); array_unshift(\$cfg[\"repositories\"], [\"type\" => \"path\", \"url\" => \"../../packages/*\", \"options\" => [\"symlink\" => false]]); file_put_contents(\"composer.json\", json_encode(\$cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'"
+
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
 
 # Overwrite vendor packages with local source (picks up all custom changes automatically)
@@ -106,8 +112,9 @@ RUN mkdir -p /root/.composer
 RUN mkdir -p /fleetbase/api/.composer && chown www-data:www-data /fleetbase/api/.composer
 
 RUN mkdir -p /fleetbase/api/storage/logs/ && touch /fleetbase/api/storage/logs/laravel-$(date +'%Y-%m-%d').log
+RUN mkdir -p /fleetbase/api/storage/fonts/
 RUN chown -R www-data:www-data /fleetbase/api/storage
-RUN chmod -R 755 /fleetbase/api/storage
+RUN chmod -R 775 /fleetbase/api/storage
 
 RUN chmod +x /fleetbase/api/deploy.sh
 
