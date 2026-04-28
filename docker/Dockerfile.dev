@@ -23,6 +23,12 @@ RUN install-php-extensions \
   pcntl \
   @composer
 
+# FIX: Install Ghostscript for PDF rendering
+RUN apt-get update && apt-get install -y \
+    ghostscript \
+    libgs9 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install build dependencies for GEOS
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -88,6 +94,9 @@ RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\":
 RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
 
 COPY --chown=www-data:www-data ./api /fleetbase/api
+
+
+
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
 RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
 RUN test -f /fleetbase/api/vendor/autoload.php && echo "✓ autoload.php creado correctamente" || (echo "✗ ERROR: autoload.php no encontrado" && ls -la /fleetbase/api/vendor/ && exit 1)

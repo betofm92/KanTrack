@@ -22,6 +22,12 @@ RUN install-php-extensions \
   pcntl \
   @composer
 
+# FIX #1: Install Ghostscript for PDF rendering (CRITICAL)
+RUN apt-get update && apt-get install -y \
+    ghostscript \
+    libgs9 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install build dependencies for GEOS
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -46,10 +52,10 @@ RUN curl -fsSL -o php-geos.zip \
     && cd .. \
     && rm -rf php-geos-*
 
-# Update PHP configurations
+# FIX #2: Update PHP configurations with higher memory limit (CRITICAL)
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
   && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 50M/' -e 's/^post_max_size.*/post_max_size = 50M/' \
-  -e 's/^memory_limit.*/memory_limit = 256M/' "$PHP_INI_DIR/php.ini" \
+  -e 's/^memory_limit.*/memory_limit = 512M/' "$PHP_INI_DIR/php.ini" \
   && echo 'opcache.memory_consumption=64' >> "$PHP_INI_DIR/php.ini" \
   && echo 'opcache.interned_strings_buffer=8' >> "$PHP_INI_DIR/php.ini" \
   && echo 'opcache.max_accelerated_files=4000' >> "$PHP_INI_DIR/php.ini" \
@@ -94,6 +100,7 @@ RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.ca
 # Copy local packages so composer can install them as path repos
 COPY --chown=www-data:www-data ./packages /fleetbase/packages
 COPY --chown=www-data:www-data ./api /fleetbase/api
+
 
 # Inject path repositories into composer.json so local packages take priority over the registry
 RUN su www-data -s /bin/sh -c "php -r '\$cfg = json_decode(file_get_contents(\"composer.json\"), true); array_unshift(\$cfg[\"repositories\"], [\"type\" => \"path\", \"url\" => \"../../packages/*\", \"options\" => [\"symlink\" => false]]); file_put_contents(\"composer.json\", json_encode(\$cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'"
