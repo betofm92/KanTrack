@@ -1,0 +1,26 @@
+# docker-compose.prebuilt.yml
+#
+# Override para usar el frontend PRE-BUILDEADO (dist/ commiteado al repo).
+# Reemplaza el servicio `console` del docker-compose.yml base para que use
+# Dockerfile.prebuilt en lugar de buildear desde cero en la VM.
+#
+# IMPORTANTE: Al usar -f explícitos, Docker NO carga docker-compose.override.yml
+# automáticamente. Por eso este archivo debe usarse junto con el override:
+#
+# MODO PRE-BUILT (deploy rápido, sin build en VM):
+#   docker compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.prebuilt.yml up -d
+#
+# MODO NORMAL (build completo en VM, comportamiento original):
+#   docker compose up -d
+#
+# Prerequisito para el modo pre-built:
+#   Ejecutar scripts/build-console-docker.sh localmente antes de hacer commit/push.
+
+services:
+  console:
+    build:
+      context: .
+      dockerfile: ./console/Dockerfile.prebuilt
+      # Sin args de build: no hay stage de Node, no hay pnpm install
+    # El resto de la configuración (ports, volumes, healthcheck, depends_on,
+    # restart, mem_limit, etc.) se hereda del docker-compose.yml base.

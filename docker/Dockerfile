@@ -25,7 +25,6 @@ RUN install-php-extensions \
 # FIX #1: Install Ghostscript for PDF rendering (CRITICAL)
 RUN apt-get update && apt-get install -y \
     ghostscript \
-    libgs9 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install build dependencies for GEOS

@@ -1,0 +1,196 @@
+name: Console Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: console-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: kantrack-console
+  TARBALL_NAME: kantrack-console.tar.gz
+
+jobs:
+  build-console:
+    name: Build Console Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.5.0
+
+      - name: Get pnpm store path
+        id: pnpm-store-path
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store-path.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build console
+        run: pnpm run build
+        working-directory: ./console
+
+      - name: Set SHORT_SHA environment variable
+        run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f console/Dockerfile.prebuilt \
+            -t ${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }} \
+            .
+
+      - name: Serialize Docker image to tarball
+        run: |
+          docker save ${{ env.IMAGE_NAME }}:latest ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }} \
+            | gzip > /tmp/${{ env.TARBALL_NAME }}
+
+      - name: Log tarball size
+        run: ls -lh /tmp/${{ env.TARBALL_NAME }}
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kantrack-console-image
+          path: /tmp/${{ env.TARBALL_NAME }}
+          retention-days: 1
+
+  deploy-console:
+    name: Deploy Console to VM
+    needs: [build-console]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Set SHORT_SHA environment variable
+        run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_ENV
+
+      - name: Validate SSH secrets
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [[ -z "$SSH_HOST" ]]; then
+            echo "::error::SSH_HOST secret is not set or empty"
+            exit 1
+          fi
+          if [[ -z "$SSH_USER" ]]; then
+            echo "::error::SSH_USER secret is not set or empty"
+            exit 1
+          fi
+          if [[ -z "$SSH_PRIVATE_KEY" ]]; then
+            echo "::error::SSH_PRIVATE_KEY secret is not set or empty"
+            exit 1
+          fi
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kantrack-console-image
+          path: /tmp/
+
+      - name: Write SSH private key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+      - name: Add VM to known_hosts
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT_VAL: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT=${SSH_PORT_VAL:-22}
+          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Transfer tarball to VM
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT_VAL: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT=${SSH_PORT_VAL:-22}
+          scp -P "$PORT" -i ~/.ssh/id_deploy \
+            /tmp/${{ env.TARBALL_NAME }} \
+            "$SSH_USER@$SSH_HOST:/tmp/${{ env.TARBALL_NAME }}"
+
+      - name: Load Docker image on VM
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT_VAL: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT=${SSH_PORT_VAL:-22}
+          ssh -p "$PORT" -i ~/.ssh/id_deploy \
+            "$SSH_USER@$SSH_HOST" \
+            "docker load < /tmp/${{ env.TARBALL_NAME }}"
+
+      - name: Restart console service on VM
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT_VAL: ${{ secrets.SSH_PORT }}
+          SSH_DEPLOY_PATH: ${{ secrets.SSH_DEPLOY_PATH }}
+        run: |
+          PORT=${SSH_PORT_VAL:-22}
+          ssh -p "$PORT" -i ~/.ssh/id_deploy \
+            "$SSH_USER@$SSH_HOST" \
+            "cd $SSH_DEPLOY_PATH && docker compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.prebuilt.yml up -d --no-build --force-recreate console"
+
+      - name: Cleanup tarball on VM
+        continue-on-error: true
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT_VAL: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT=${SSH_PORT_VAL:-22}
+          ssh -p "$PORT" -i ~/.ssh/id_deploy \
+            "$SSH_USER@$SSH_HOST" \
+            "rm -f /tmp/${{ env.TARBALL_NAME }}"
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/id_deploy
+
+      - name: Deploy summary
+        run: |
+          echo "## ✅ Console Deploy Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Image | \`${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tag | \`${{ env.IMAGE_NAME }}:latest\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit SHA | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY

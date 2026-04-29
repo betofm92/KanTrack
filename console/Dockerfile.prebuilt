@@ -1,0 +1,24 @@
+# console/Dockerfile.prebuilt
+#
+# Modo PRE-BUILT: el dist/ ya fue generado localmente y commiteado al repo.
+# No requiere Node, pnpm ni ember-cli en la VM. Solo nginx sirve los estáticos.
+#
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d
+#
+# Prerequisito:
+#   Haber ejecutado scripts/build-console.sh antes de hacer commit/push.
+
+FROM nginx:1.27-alpine
+
+# Eliminar config default de nginx
+RUN rm -f /etc/nginx/conf.d/*
+
+# Copiar configuración de nginx del proyecto
+COPY console/nginx.conf /etc/nginx/conf.d/app.conf
+
+# Copiar el dist pre-buildeado (debe existir en el repo)
+COPY console/dist /usr/share/nginx/html
+
+EXPOSE 4200
+CMD ["nginx", "-g", "daemon off;"]

@@ -57,3 +57,4 @@ builds/osx/frankenphp
 *.dylib
 *.bak*
 mysql_data/
+up.sh

@@ -233,7 +233,8 @@ services:
     ports:
       - "8000:80"
     depends_on:
-      - application
+      application:
+        condition: service_healthy
     mem_limit: 64m
     mem_reservation: 32m
     pids_limit: 100

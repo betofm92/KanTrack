@@ -27,7 +27,10 @@ $node_modules.tar.gz
 docker-compose.override.yml
 **/node_modules/
 **/.git/
+# Excluir dist/ en general, EXCEPTO console/dist/ que se usa en modo pre-built.
+# El Dockerfile.prebuilt necesita acceso a console/dist/ en el contexto de build.
 **/dist/
+!console/dist/
 **/tmp/
 **/.DS_Store
 *.log

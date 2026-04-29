@@ -114,13 +114,45 @@ mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
 
 ###############################################################################
-# 7. Start stack, wait for DB, then run deploy
+# 7. Detectar si existe un dist/ pre-buildeado y preguntar qué modo usar
 ###############################################################################
-echo "⏳  Starting KanTrack containers..."
-docker compose up -d
+COMPOSE_FILES="-f docker-compose.yml"
+PREBUILT_DIST_EXISTS=false
+
+if [[ -d "$PROJECT_ROOT/console/dist" ]] && [[ -n "$(ls -A "$PROJECT_ROOT/console/dist" 2>/dev/null)" ]]; then
+  PREBUILT_DIST_EXISTS=true
+fi
+
+if [[ "$PREBUILT_DIST_EXISTS" == true ]]; then
+  echo ""
+  echo "ℹ︎  Se detectó un dist/ pre-buildeado en console/dist/"
+  echo "   Modo pre-built : la VM usa el dist/ del repo (deploy rápido, sin build en VM)"
+  echo "   Modo normal    : la VM buildea el frontend desde cero (más lento, ~10-15 min)"
+  echo ""
+  while true; do
+    read -rp "¿Usar el dist/ pre-buildeado? (y/n) [y]: " PREBUILT_INPUT
+    PREBUILT_INPUT=$(echo "${PREBUILT_INPUT:-y}" | tr '[:upper:]' '[:lower:]')
+    case "$PREBUILT_INPUT" in
+      y|yes|"") COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.prebuilt.yml"; echo "➜  Modo: pre-built"; break ;;
+      n|no)     echo "➜  Modo: build en VM (normal)"; break ;;
+      *) echo "Por favor responde 'y' o 'n'." ;;
+    esac
+  done
+else
+  echo "ℹ︎  No se encontró console/dist/ — usando modo normal (build en VM)."
+  echo "   Para usar el modo pre-built en el futuro, ejecuta primero:"
+  echo "   bash scripts/build-console-docker.sh"
+fi
 
 ###############################################################################
-# 7a. Wait for the database container to be ready
+# 8. Start stack, wait for DB, then run deploy
+###############################################################################
+echo "⏳  Starting KanTrack containers..."
+# shellcheck disable=SC2086
+docker compose $COMPOSE_FILES up -d
+
+###############################################################################
+# 8a. Wait for the database container to be ready
 ###############################################################################
 DB_SERVICE="database"     # ← change if your docker‑compose uses a different name
 DB_WAIT_TIMEOUT=60        # seconds
@@ -158,11 +190,12 @@ fi
 echo "✔  Database is ready."
 
 ###############################################################################
-# 7b. Run the deploy script inside the application container
+# 8b. Run the deploy script inside the application container
 ###############################################################################
 echo "⏳  Running deploy script inside the application container..."
 docker compose exec application bash -c "./deploy.sh"
-docker compose up -d
+# shellcheck disable=SC2086
+docker compose $COMPOSE_FILES up -d
 
 echo
 echo "🏁  Fleetbase is up!"
