@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // kantrack:check-expired-plans ya está registrado en CoreServiceProvider (diario 00:30)
     }
 
     /**

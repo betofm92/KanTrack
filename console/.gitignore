@@ -1,4 +1,8 @@
 # compiled output
+# NOTA: /dist/ está excluido por defecto (modo build-en-VM).
+# Para usar el modo pre-built (build local + commit del dist), ejecuta:
+#   bash scripts/build-console.sh
+# y luego comenta la línea /dist/ antes de hacer git add.
 /dist/
 /declarations/
 
@@ -26,3 +30,6 @@
 
 # broccoli-debug
 /DEBUG/
+
+# Backups de docker-compose override (timestamped)
+docker-compose.override.yml.bak.*

@@ -32,6 +32,7 @@ export default class UserModel extends Model {
     @attr('string') locale;
     @attr('boolean') is_online;
     @attr('boolean') is_admin;
+    @attr('boolean') is_super_admin;
     @attr('boolean') is_subscribed;
     @attr('boolean') is_trialing;
     @attr('raw') meta;

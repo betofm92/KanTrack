@@ -1,0 +1,83 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name={{t "modals.plan-form.slug-label"}} @wrapperClass="col-span-1">
+                <Input @value={{@options.plan.slug}} class="form-input w-full" placeholder={{t "modals.plan-form.slug-placeholder"}} />
+            </InputGroup>
+            <InputGroup @name={{t "modals.plan-form.name-label"}} @wrapperClass="col-span-1">
+                <Input @value={{@options.plan.name}} class="form-input w-full" placeholder={{t "modals.plan-form.name-placeholder"}} />
+            </InputGroup>
+        </div>
+
+        <InputGroup @name={{t "modals.plan-form.description-label"}}>
+            <Textarea @value={{@options.plan.description}} class="form-input w-full" rows="2" />
+        </InputGroup>
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name={{t "modals.plan-form.monthly-price-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.price_monthly}} class="form-input w-full" min="0" step="0.01" />
+            </InputGroup>
+            <InputGroup @name={{t "modals.plan-form.annual-price-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.price_annual}} class="form-input w-full" min="0" step="0.01" />
+            </InputGroup>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+            <InputGroup @name={{t "modals.plan-form.max-vehicles-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.max_vehicles}} class="form-input w-full" min="1" placeholder="∞" />
+            </InputGroup>
+            <InputGroup @name={{t "modals.plan-form.max-users-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.max_users}} class="form-input w-full" min="1" placeholder="∞" />
+            </InputGroup>
+            <InputGroup @name={{t "modals.plan-form.max-drivers-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.max_drivers}} class="form-input w-full" min="1" placeholder="∞" />
+            </InputGroup>
+            <InputGroup @name="Máx. lugares (vacío = ∞)" @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.max_places}} class="form-input w-full" min="1" placeholder="∞" />
+            </InputGroup>
+            <InputGroup @name="Máx. clientes (vacío = ∞)" @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.max_customers}} class="form-input w-full" min="1" placeholder="∞" />
+            </InputGroup>
+            <InputGroup @name="Intervalo GPS (seg)" @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.gps_interval_seconds}} class="form-input w-full" min="5" />
+            </InputGroup>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-2">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.has_api}} @onToggle={{fn (mut @options.plan.has_api)}} />
+                {{t "modals.plan-form.feature-api"}}
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.has_webhooks}} @onToggle={{fn (mut @options.plan.has_webhooks)}} />
+                {{t "modals.plan-form.feature-webhooks"}}
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.has_reports}} @onToggle={{fn (mut @options.plan.has_reports)}} />
+                {{t "modals.plan-form.feature-reports"}}
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.has_driver_management}} @onToggle={{fn (mut @options.plan.has_driver_management)}} />
+                {{t "modals.plan-form.feature-driver-mgmt"}}
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.has_advanced_analytics}} @onToggle={{fn (mut @options.plan.has_advanced_analytics)}} />
+                {{t "modals.plan-form.feature-analytics"}}
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <Toggle @isToggled={{@options.plan.is_custom}} @onToggle={{fn (mut @options.plan.is_custom)}} />
+                {{t "modals.plan-form.feature-custom-price"}}
+            </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-2">
+            <InputGroup @name={{t "modals.plan-form.sort-order-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.plan.sort_order}} class="form-input w-full" min="0" />
+            </InputGroup>
+            <label class="flex items-center gap-2 text-sm cursor-pointer mt-6">
+                <Toggle @isToggled={{@options.plan.is_active}} @onToggle={{fn (mut @options.plan.is_active)}} />
+                {{t "modals.plan-form.active-label"}}
+            </label>
+        </div>
+    </div>
+</Modal::Default>

@@ -150,28 +150,12 @@ export default class PermissionModel extends Model {
     @service intl;
 
     @computed('actionName', 'name', 'resourceName', 'extensionName') get description() {
-        const actionKey = this.actionName?.toLowerCase() ?? 'unknown';
-        const resourceKey = this.resourceName?.toLowerCase() ?? 'unknown';
-        const extensionKey = this.extensionName?.toLowerCase() ?? 'unknown';
-
-        const action = this.intl.t(`common.${actionKey}`);
-        const resource = this.intl.t(`resource.${resourceKey}`);
-        const extension = this.intl.t(`resource.${extensionKey}`);
-
-
-        let actionPreposition = 'a';
-        let resourcePreposition = getPermissionAction(this.name) === '*' && resource ? 'con' : '';
-        let extensionPreposition = 'en';
-        
-
-        return this.intl.t('permission.description', {
-            action,
-            actionPreposition,
-            resource,
-            resourcePreposition,
-            extension,
-            extensionPreposition
-        });
+        const action = this.actionName ?? '';
+        const resource = this.resourceName ?? '';
+        const extension = this.extensionName ?? '';
+        const isWildcard = getPermissionAction(this.name) === '*';
+        const parts = [action, resource, isWildcard && extension ? `on ${extension}` : extension].filter(Boolean);
+        return parts.join(' ');
     }
 
     @computed('name', 'intl.locale') get textoMostrar() {
@@ -184,7 +168,6 @@ export default class PermissionModel extends Model {
         const resource = this.intl.exists(`resource.${resourceKey}`) ? this.intl.t(`resource.${resourceKey}`) : resourceKey;
         const extension = this.intl.exists(`resource.${extensionKey}`) ? this.intl.t(`resource.${extensionKey}`) : extensionKey;
 
-        console.log('textoMostrar ', action, actionKey, resource, resourceKey);
 
         return `${action} ${resource} ${extension}`.trim().toLowerCase();
     }

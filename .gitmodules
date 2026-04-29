@@ -9,7 +9,7 @@
 	url = git@github.com:paulocrn/pallet.git
 [submodule "packages/core-api"]
 	path = packages/core-api
-	url = https://github.com/paulocrn/core-api.git
+	url = git@github.com:paulocrn/core-api.git
 	branch = main
 [submodule "packages/ember-core"]
 	path = packages/ember-core
@@ -39,3 +39,6 @@
 [submodule "packages/ledger"]
 	path = packages/ledger
 	url = git@github.com:paulocrn/ledger.git
+[submodule "docs"]
+	path = docs
+	url = git@github.com:fleetbase/docs.git

@@ -27,7 +27,7 @@ export function initialize(application) {
         },
     ];
 
-    universe.registerDefaultDashboardWidgets(defaultWidgets);
+    //universe.registerDefaultDashboardWidgets(defaultWidgets);
     universe.registerDashboardWidgets(defaultWidgets);
 }
 

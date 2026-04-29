@@ -1,12 +1,20 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container pt-0i text-gray-900 dark:text-white">
-        <InputGroup @name="Organization name" @value={{@options.organization.name}} />
-        <InputGroup @name="Organization description" @value={{@options.organization.description}} />
-        <InputGroup @name="Organization phone number">
+        <InputGroup @name={{t "modals.edit-organization.org-name"}} @value={{@options.organization.name}} />
+        <InputGroup @name={{t "modals.edit-organization.description"}} @value={{@options.organization.description}} />
+        <InputGroup @name={{t "modals.edit-organization.phone"}}>
             <PhoneInput @value={{@options.organization.phone}} @onInput={{fn (mut @options.organization.phone)}} class="form-input w-full" />
         </InputGroup>
-        <InputGroup @name="Organization currency">
+        <InputGroup @name={{t "modals.edit-organization.currency"}}>
             <CurrencySelect @value={{@options.organization.currency}} @onSelect={{fn (mut @options.organization.currency)}} @triggerClass="w-full form-select" />
         </InputGroup>
+        {{#if @options.showAdminUser}}
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+                <p class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">{{t "modals.edit-organization.admin-user-section"}}</p>
+                <InputGroup @name={{t "modals.edit-organization.full-name"}} @value={{@options.adminUser.name}} />
+                <InputGroup @name={{t "modals.edit-organization.email"}} @value={{@options.adminUser.email}} @type="email" />
+                <InputGroup @name={{t "modals.edit-organization.password"}} @value={{@options.adminUser.password}} @type="password" @placeholder={{if @options.isEditing (t "modals.edit-organization.password-help")}} />
+            </div>
+        {{/if}}
     </div>
 </Modal::Default>

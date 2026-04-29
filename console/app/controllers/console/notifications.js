@@ -68,7 +68,7 @@ export default class NotificationsController extends Controller {
      *
      * @var {Integer}
      */
-    @tracked limit = 20;
+    @tracked limit = 15;
 
     /**
      * The param to sort the data on, the param with prepended `-` is descending

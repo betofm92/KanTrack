@@ -33,6 +33,8 @@ export default class Company extends Model {
     @attr('string') phone;
     @attr('string') status;
     @attr('string') slug;
+    @attr('string') subscription_plan_name;
+    @attr('string') subscription_status;
 
     /** @dates */
     @attr('date') joined_at;

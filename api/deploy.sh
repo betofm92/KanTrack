@@ -15,6 +15,9 @@ php artisan sandbox:migrate --force
 # Seed database
 php artisan fleetbase:seed
 
+# Seed KanTrack plans
+php artisan kantrack:seed-plans
+
 # Create permissions, policies, and roles
 php artisan fleetbase:create-permissions
 

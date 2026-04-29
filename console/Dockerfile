@@ -1,54 +1,37 @@
-# ---- Build Stage ----
-FROM node:18.15.0-alpine as builder
+# console/Dockerfile
+FROM node:20-alpine AS builder
 
-# Set the working directory in the container to /console
-WORKDIR /console
+WORKDIR /app
 
-# Create the pnpm directory and set the PNPM_HOME environment variable
-RUN mkdir -p ~/.pnpm
-ENV PNPM_HOME=/root/.pnpm
+# deps de build
+RUN apk add --no-cache git python3 make g++
 
-# Set environment
-ARG ENVIRONMENT=production
+# habilita pnpm via corepack
+RUN corepack enable
 
-# Add the pnpm global bin to the PATH
-ENV PATH=/root/.pnpm/bin:$PATH
+# Copia primero manifests para cache
+COPY pnpm-workspace.yaml package.json ./
 
-# Copy pnpm-lock.yaml (or package.json) into the directory /console in the container
-COPY package.json pnpm-lock.yaml ./
+# Copia workspace
+COPY packages ./packages
+COPY console ./console
 
-# Copy over .npmrc if applicable
-COPY .npmr[c] ./
+# Instala dependencias del workspace
+RUN pnpm install --no-frozen-lockfile
 
-# Install global dependencies
-RUN npm install -g ember-cli pnpm 
+# sanity check: deben existir los packages
+RUN test -d /app/packages/dev-engine && test -d /app/packages/ember-core
 
-# Install git
-RUN apk update && apk add git openssh-client
+# Build del console
+WORKDIR /app/console
+RUN pnpm run build
 
-# Trust GitHub's RSA host key
-RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-# Install app dependencies
-RUN pnpm install
-
-# Copy the console directory contents into the container at /console
-COPY . .
-
-# Build the application
-RUN pnpm build --environment $ENVIRONMENT
-
-# ---- Serve Stage ----
+# nginx stage
 FROM nginx:alpine
+RUN rm -f /etc/nginx/conf.d/*
+RUN echo 'server { listen 4200; root /usr/share/nginx/html; location / { try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/app.conf
 
-# Copy the built app to our served directory
-COPY --from=builder /console/dist /usr/share/nginx/html
+COPY --from=builder /app/console/dist /usr/share/nginx/html
 
-# Expose the port nginx is bound to
 EXPOSE 4200
-
-# Use custom nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

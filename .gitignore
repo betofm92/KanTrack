@@ -55,3 +55,6 @@ builds/osx/frankenphp
 *.dll
 *.so
 *.dylib
+*.bak*
+mysql_data/
+up.sh

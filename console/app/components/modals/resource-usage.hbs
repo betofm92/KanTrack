@@ -1,0 +1,29 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+        <div class="space-y-3">
+            {{#each-in @options.usage as |resource stats|}}
+                <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div class="capitalize text-sm font-medium">{{resource}}</div>
+                    <div class="flex items-center gap-3 text-sm">
+                        {{#if stats.unlimited}}
+                            <span class="text-blue-500">{{stats.current}} / ∞</span>
+                        {{else}}
+                            <div class="w-32 h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                                <div
+                                    class="h-full rounded-full {{if stats.exceeded "bg-red-500" "bg-green-500"}}"
+                                    style="width: {{if stats.limit (concat (min (div stats.current stats.limit) 1) "00%") "0%"}}"
+                                ></div>
+                            </div>
+                            <span class="{{if stats.exceeded "text-red-500 font-semibold" ""}}">
+                                {{stats.current}} / {{stats.limit}}
+                            </span>
+                            {{#if stats.exceeded}}
+                                <span class="text-xs text-red-500 font-medium">{{t "modals.resource-usage.limit-label"}}</span>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each-in}}
+        </div>
+    </div>
+</Modal::Default>

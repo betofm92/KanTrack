@@ -1,0 +1,57 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0 text-gray-900 dark:text-white">
+
+        {{#if @options.subscription}}
+            <div class="mb-4 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm">
+                <p class="font-medium mb-1">{{t "modals.assign-plan.current-subscription"}}</p>
+                <p>{{t "modals.subscription-history.plan-label"}} <strong>{{@options.subscription.plan_slug}}</strong></p>
+                <p>{{t "modals.subscription-history.status-label"}} <strong>{{@options.subscription.status}}</strong></p>
+                {{#if @options.subscription.expires_at}}
+                    <p>{{t "modals.subscription-history.expiry-label"}} <strong>{{@options.subscription_expires_display}}</strong></p>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <InputGroup @name={{t "modals.assign-plan.plan-label"}}>
+            <select class="form-select w-full" onchange={{action (mut @options.form.plan_slug) value="target.value"}}>
+                <option value="">{{t "modals.assign-plan.select-plan-placeholder"}}</option>
+                {{#each @options.plans as |plan|}}
+                    <option value={{plan.slug}} selected={{eq @options.form.plan_slug plan.slug}}>
+                        {{plan.name}} {{#if plan.price_monthly}}(${{plan.price_monthly}}/mes){{/if}}
+                    </option>
+                {{/each}}
+            </select>
+        </InputGroup>
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name={{t "modals.assign-plan.billing-cycle-label"}} @wrapperClass="col-span-1">
+                <select class="form-select w-full" onchange={{action (mut @options.form.billing_cycle) value="target.value"}}>
+                    <option value="monthly" selected={{eq @options.form.billing_cycle "monthly"}}>{{t "modals.assign-plan.cycle-monthly"}}</option>
+                    <option value="annual" selected={{eq @options.form.billing_cycle "annual"}}>{{t "modals.assign-plan.cycle-annual"}}</option>
+                    <option value="custom" selected={{eq @options.form.billing_cycle "custom"}}>{{t "modals.assign-plan.cycle-custom"}}</option>
+                </select>
+            </InputGroup>
+            <InputGroup @name={{t "modals.assign-plan.status-label"}} @wrapperClass="col-span-1">
+                <select class="form-select w-full" onchange={{action (mut @options.form.status) value="target.value"}}>
+                    <option value="trial" selected={{eq @options.form.status "trial"}}>{{t "modals.assign-plan.status-trial"}}</option>
+                    <option value="active" selected={{eq @options.form.status "active"}}>{{t "modals.assign-plan.status-active"}}</option>
+                    <option value="suspended" selected={{eq @options.form.status "suspended"}}>{{t "modals.assign-plan.status-suspended"}}</option>
+                </select>
+            </InputGroup>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <InputGroup @name={{t "modals.assign-plan.extra-vehicles-label"}} @wrapperClass="col-span-1">
+                <Input @type="number" @value={{@options.form.extra_vehicles}} class="form-input w-full" min="0" />
+            </InputGroup>
+            <InputGroup @name={{t "modals.assign-plan.expiry-date-label"}} @wrapperClass="col-span-1">
+                <Input @type="date" @value={{@options.form.expires_at}} class="form-input w-full" />
+            </InputGroup>
+        </div>
+
+        <InputGroup @name={{t "modals.assign-plan.notes-label"}}>
+            <Textarea @value={{@options.form.notes}} class="form-input w-full" rows="2" placeholder={{t "modals.assign-plan.notes-placeholder"}} />
+        </InputGroup>
+
+    </div>
+</Modal::Default>

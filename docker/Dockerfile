@@ -1,5 +1,4 @@
 # syntax = docker/dockerfile:1.2
-# Base stage
 FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
 
 # Install packages
@@ -19,11 +18,14 @@ RUN install-php-extensions \
   apcu \
   opcache \
   memcached \
-  imagick \
-  # geos \
   sockets \
   pcntl \
   @composer
+
+# FIX #1: Install Ghostscript for PDF rendering (CRITICAL)
+RUN apt-get update && apt-get install -y \
+    ghostscript \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install build dependencies for GEOS
 RUN apt-get update \
@@ -49,22 +51,22 @@ RUN curl -fsSL -o php-geos.zip \
     && cd .. \
     && rm -rf php-geos-*
 
-# Update PHP configurations
+# FIX #2: Update PHP configurations with higher memory limit (CRITICAL)
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
-  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' \
-  -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
+  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 50M/' -e 's/^post_max_size.*/post_max_size = 50M/' \
+  -e 's/^memory_limit.*/memory_limit = 512M/' "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.memory_consumption=64' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.interned_strings_buffer=8' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.max_accelerated_files=4000' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.revalidate_freq=60' >> "$PHP_INI_DIR/php.ini" \
+  && echo 'opcache.fast_shutdown=1' >> "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
 RUN npm install -g chokidar pnpm ember-cli npm-cli-login
 
-# Install ssm-parent
-COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent
-
 # Create the pnpm directory and set the PNPM_HOME environment variable
 RUN mkdir -p ~/.pnpm
 ENV PNPM_HOME=/root/.pnpm
-
-# Add the pnpm global bin to the PATH
 ENV PATH=/root/.pnpm/bin:$PATH
 
 # Set some build ENV variables
@@ -77,95 +79,71 @@ ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
 ENV FLEETBASE_VERSION=0.7.19
 
-# Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
 
-# Setup github auth
 ARG GITHUB_AUTH_KEY
 
-# Copy Caddyfile
 COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 
-# Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && mkdir -p /fleetbase/console && chown -R www-data:www-data /fleetbase
-
-# Generate and store a UUID in .fleetbase-id
 RUN uuidgen > /fleetbase/api/.fleetbase-id
-
-# Export the same ID as an environment variable for use in the container
 RUN export FLEETBASE_INSTANCE_ID=$(cat /fleetbase/api/.fleetbase-id) && \
     echo "FLEETBASE_INSTANCE_ID=$FLEETBASE_INSTANCE_ID" >> /etc/environment
 
-# Set working directory
 WORKDIR /fleetbase/api
 
-# If GITHUB_AUTH_KEY is provided, create auth.json with it
 RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\": \"$GITHUB_AUTH_KEY\"}}" > auth.json; fi
-
-# Prepare composer cache directory
 RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
 
-# Optimize Composer Dependency Installation
-COPY --chown=www-data:www-data ./api/composer.json ./api/composer.lock /fleetbase/api/
-
-# Pre-install Composer dependencies
-RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --no-cache"
-
-# Setup application
+# Copy local packages so composer can install them as path repos
+COPY --chown=www-data:www-data ./packages /fleetbase/packages
 COPY --chown=www-data:www-data ./api /fleetbase/api
 
-# Dump autoload
-RUN su www-data -s /bin/sh -c "composer dumpautoload"
 
-# Setup composer root directory
+# Inject path repositories into composer.json so local packages take priority over the registry
+RUN su www-data -s /bin/sh -c "php -r '\$cfg = json_decode(file_get_contents(\"composer.json\"), true); array_unshift(\$cfg[\"repositories\"], [\"type\" => \"path\", \"url\" => \"../../packages/*\", \"options\" => [\"symlink\" => false]]); file_put_contents(\"composer.json\", json_encode(\$cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'"
+
+RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --classmap-authoritative"
+
+# Overwrite vendor packages with local source (picks up all custom changes automatically)
+COPY --chown=www-data:www-data ./packages/core-api/src /fleetbase/api/vendor/fleetbase/core-api/src
+COPY --chown=www-data:www-data ./packages/core-api/migrations /fleetbase/api/vendor/fleetbase/core-api/migrations
+COPY --chown=www-data:www-data ./packages/core-api/views /fleetbase/api/vendor/fleetbase/core-api/views
+COPY --chown=www-data:www-data ./packages/core-api/resources /fleetbase/api/vendor/fleetbase/core-api/resources
+COPY --chown=www-data:www-data ./packages/fleetops/server/src /fleetbase/api/vendor/fleetbase/fleetops-api/server/src
+COPY --chown=www-data:www-data ./packages/fleetops/server/resources /fleetbase/api/vendor/fleetbase/fleetops-api/server/resources
+
+RUN su www-data -s /bin/sh -c "composer dumpautoload --optimize"
+RUN test -f /fleetbase/api/vendor/autoload.php && echo "✓ autoload.php creado correctamente" || (echo "✗ ERROR: autoload.php no encontrado" && ls -la /fleetbase/api/vendor/ && exit 1)
+
 RUN mkdir -p /root/.composer
 RUN mkdir -p /fleetbase/api/.composer && chown www-data:www-data /fleetbase/api/.composer
 
-# Setup logging
 RUN mkdir -p /fleetbase/api/storage/logs/ && touch /fleetbase/api/storage/logs/laravel-$(date +'%Y-%m-%d').log
+RUN mkdir -p /fleetbase/api/storage/fonts/
 RUN chown -R www-data:www-data /fleetbase/api/storage
-RUN chmod -R 755 /fleetbase/api/storage
+RUN chmod -R 775 /fleetbase/api/storage
 
-# Set permissions for deploy script
 RUN chmod +x /fleetbase/api/deploy.sh
 
-# Install go-crond
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
-# Scheduler dev stage
-FROM base AS scheduler-dev
-ENTRYPOINT []
-CMD ["go-crond", "--verbose", "root:./crontab"]
-
 # Scheduler stage
 FROM base AS scheduler
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--"]
+ENTRYPOINT []
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Events stage
 FROM base AS events
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "artisan", "queue:work"]
-
-# Events stage
-FROM base AS events-dev
-ENTRYPOINT []
-CMD ["php", "artisan", "queue:work"]
-
-# Application dev stage
-FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"]
-
-# Application release stage
-FROM base AS app-release
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"] 
+CMD ["php", "artisan", "queue:work --max-jobs=50 --max-memory=64"]
 
 # Application stage
 FROM base AS app
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"]
+ENV APP_DEBUG=false
+ENV OCTANE_WORKERS=4
+ENTRYPOINT ["docker-php-entrypoint"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=${OCTANE_WORKERS} --max-requests=250 --port=8000 --host=0.0.0.0"]
