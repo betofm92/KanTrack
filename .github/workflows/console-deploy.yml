@@ -55,7 +55,16 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: |
+          rm -f pnpm-lock.yaml
+          pnpm install --no-frozen-lockfile
+
+      - name: Verify workspace links
+        run: |
+          echo "=== ember-ui count.hbs (first 3 lines) ===" 
+          head -3 node_modules/@fleetbase/ember-ui/addon/components/widget/count.hbs || true
+          echo "=== fleetops key-metrics.hbs (first 3 lines) ==="
+          head -3 node_modules/@fleetbase/fleetops-engine/addon/components/widget/fleet-ops-key-metrics.hbs || true
 
       - name: Build console
         run: pnpm run build
