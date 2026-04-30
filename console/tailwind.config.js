@@ -16,6 +16,30 @@ module.exports = {
         {
             pattern: /(py|px|mx|my|gap)-[1-9][0-9]?/,
         },
+        // 1.1 — Clases de color de texto dinámicas (generadas vía @colorClass en widget/count.hbs)
+        {
+            pattern: /text-(red|green|amber|blue)-400/,
+        },
+        // 1.2 — Clases de fondo con opacidad dinámicas (contenedor de ícono y dot)
+        {
+            pattern: /bg-(red|green|amber|blue)-400\/10/,
+        },
+        // 1.3 — Clases de borde con opacidad dinámicas
+        {
+            pattern: /border-(red|green|amber|blue)-400\/20/,
+        },
+        // 1.4 — Clases de hover y animación con valores arbitrarios (translate, shadow, fadeUp)
+        {
+            pattern: /hover:-translate-y-\[.+\]/,
+            variants: ['hover'],
+        },
+        {
+            pattern: /hover:shadow-\[.+\]/,
+            variants: ['hover'],
+        },
+        {
+            pattern: /animate-\[.+\]/,
+        },
     ],
     theme: {
         extend: {
