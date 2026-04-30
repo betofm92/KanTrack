@@ -122,6 +122,7 @@ services:
       - cache
 
   console:
+    image: kantrack-console:latest
     build:
       context: .
       dockerfile: ./console/Dockerfile
