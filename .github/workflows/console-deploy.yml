@@ -70,6 +70,15 @@ jobs:
         run: pnpm run build
         working-directory: ./console
 
+      - name: Verify build output
+        run: |
+          echo "=== index.html snippet ==="
+          grep -o 'kpi-card\|metric-card\|accentColor\|isKpi\|fleet-ops-key-metrics' console/dist/index.html | head -5 || echo "Not found in index.html (expected - Ember compiles to JS)"
+          echo "=== JS files with new widget code ==="
+          grep -rl 'kpi-card\|accentColor\|isKpi' console/dist/assets/ 2>/dev/null | head -3 || echo "Searching..."
+          grep -l 'kpi.card\|accentColor\|isKpi' console/dist/assets/*.js 2>/dev/null | head -3 || echo "Not found - checking all JS"
+          ls -lh console/dist/assets/*.js 2>/dev/null | tail -5
+
       - name: Set SHORT_SHA environment variable
         run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_ENV
 

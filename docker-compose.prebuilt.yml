@@ -18,9 +18,9 @@
 
 services:
   console:
+    image: kantrack-console:latest
     build:
       context: .
       dockerfile: ./console/Dockerfile.prebuilt
-      # Sin args de build: no hay stage de Node, no hay pnpm install
     # El resto de la configuración (ports, volumes, healthcheck, depends_on,
     # restart, mem_limit, etc.) se hereda del docker-compose.yml base.
