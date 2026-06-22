@@ -2,6 +2,7 @@
   "name": "fleetbase",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "description": "Fleetbase monorepo (console + packages)",
   "license": "AGPL-3.0-or-later",
   "pnpm": {

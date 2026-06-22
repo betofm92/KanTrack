@@ -6,8 +6,8 @@ WORKDIR /app
 # deps de build
 RUN apk add --no-cache git python3 make g++
 
-# habilita pnpm via corepack
-RUN corepack enable
+# habilita pnpm via corepack, fijando pnpm 9 (compatible con Node 20)
+RUN corepack enable && corepack prepare pnpm@9 --activate
 
 # Copia primero manifests para cache
 COPY pnpm-workspace.yaml package.json ./
