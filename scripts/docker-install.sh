@@ -116,7 +116,8 @@ echo "✔  $CONFIG_PATH updated"
 ###############################################################################
 # 7. Detectar si existe un dist/ pre-buildeado y preguntar qué modo usar
 ###############################################################################
-COMPOSE_FILES="-f docker-compose.yml"
+# The override is always included so APP_KEY and other secrets are applied
+COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
 PREBUILT_DIST_EXISTS=false
 
 if [[ -d "$PROJECT_ROOT/console/dist" ]] && [[ -n "$(ls -A "$PROJECT_ROOT/console/dist" 2>/dev/null)" ]]; then
