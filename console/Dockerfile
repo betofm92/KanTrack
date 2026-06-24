@@ -29,9 +29,31 @@ RUN pnpm run build
 # nginx stage
 FROM nginx:alpine
 RUN rm -f /etc/nginx/conf.d/*
-RUN echo 'server { listen 4200; root /usr/share/nginx/html; location / { try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/app.conf
-
 COPY --from=builder /app/console/dist /usr/share/nginx/html
+
+# index.html: no cache — ensures users always get the latest app version after deploy
+# /assets/*: cache forever — Ember fingerprints filenames, so new content = new URL
+RUN printf 'server {\n\
+    listen 4200;\n\
+    root /usr/share/nginx/html;\n\
+    gzip on;\n\
+    gzip_types text/plain text/css application/javascript application/json;\n\
+\n\
+    location = /index.html {\n\
+        add_header Cache-Control "no-cache, no-store, must-revalidate";\n\
+        add_header Pragma "no-cache";\n\
+        add_header Expires "0";\n\
+    }\n\
+\n\
+    location /assets/ {\n\
+        expires 1y;\n\
+        add_header Cache-Control "public, immutable";\n\
+    }\n\
+\n\
+    location / {\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/app.conf
 
 EXPOSE 4200
 CMD ["nginx", "-g", "daemon off;"]
