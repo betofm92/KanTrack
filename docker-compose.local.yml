@@ -78,8 +78,8 @@ services:
       MAIL_MAILER: smtp
       MAIL_HOST: sandbox.smtp.mailtrap.io
       MAIL_PORT: 2525
-      MAIL_USERNAME: 79e8629fd3fb41
-      MAIL_PASSWORD: b0e9c1b266e2c0
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
       MAIL_ENCRYPTION: tls
       MAIL_FROM_ADDRESS: from@example.com
     depends_on:
@@ -120,8 +120,8 @@ services:
       MAIL_MAILER: smtp
       MAIL_HOST: sandbox.smtp.mailtrap.io
       MAIL_PORT: 2525
-      MAIL_USERNAME: 79e8629fd3fb41
-      MAIL_PASSWORD: b0e9c1b266e2c0
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
       MAIL_ENCRYPTION: tls
       MAIL_FROM_ADDRESS: from@example.com
       APP_NAME: KanTrack

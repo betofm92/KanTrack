@@ -6,6 +6,9 @@
 http://:8000 {
 	root * /fleetbase/api/public
 	encode zstd gzip
+	header X-Content-Type-Options "nosniff"
+	header X-Frame-Options "DENY"
+	header Referrer-Policy "strict-origin-when-cross-origin"
 	php_server {
 		resolve_root_symlink
 	}
@@ -15,5 +18,8 @@ http://:4200 {
 	root * /fleetbase/console/dist
 	try_files {path} /
 	encode zstd gzip
+	header X-Content-Type-Options "nosniff"
+	header X-Frame-Options "SAMEORIGIN"
+	header Referrer-Policy "strict-origin-when-cross-origin"
 	file_server
 }

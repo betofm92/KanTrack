@@ -5,8 +5,9 @@ services:
     mem_limit: 96m
     mem_reservation: 48m
     pids_limit: 100
+    command: sh -c 'redis-server ${REDIS_PASSWORD:+--requirepass "$$REDIS_PASSWORD"}'
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "${REDIS_PASSWORD:+-a}", "${REDIS_PASSWORD:-}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,8 +23,6 @@ services:
         soft: 65535
         hard: 65535
       nproc: 4096
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "kantrack"
@@ -70,11 +69,13 @@ services:
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
+      CACHE_URL: "${REDIS_URL:-tcp://cache}"
+      REDIS_URL: "${REDIS_URL:-tcp://cache}"
     depends_on:
-      - database
-      - cache
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
 
   queue:
     image: local-fleetbase-api:latest
@@ -100,8 +101,8 @@ services:
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
+      CACHE_URL: "${REDIS_URL:-tcp://cache}"
+      REDIS_URL: "${REDIS_URL:-tcp://cache}"
       APP_URL: "${APP_URL}"
       APP_NAME: "${APP_NAME:-KanTrack}"
       APP_ENV: "${APP_ENV:-production}"
@@ -118,8 +119,10 @@ services:
       MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS}"
       FIREBASE_CREDENTIALS: "${FIREBASE_CREDENTIALS}"
     depends_on:
-      - database
-      - cache
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
 
   console:
     image: kantrack-console:latest
@@ -136,7 +139,7 @@ services:
       API_HOST: "http://application:8000"
       SOCKET_HOST: "socket"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4200/health.json"]
+      test: ["CMD", "curl", "-f", "http://localhost:4200/index.html"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -178,8 +181,8 @@ services:
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
+      CACHE_URL: "${REDIS_URL:-tcp://cache}"
+      REDIS_URL: "${REDIS_URL:-tcp://cache}"
 
       CONSOLE_HOST: "${CONSOLE_HOST}"
       FRONTEND_HOSTS: "${FRONTEND_HOSTS}"
@@ -224,8 +227,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 90s
 
   httpd:
     build:
@@ -236,6 +239,7 @@ services:
     depends_on:
       application:
         condition: service_healthy
+    restart: unless-stopped
     mem_limit: 64m
     mem_reservation: 32m
     pids_limit: 100
